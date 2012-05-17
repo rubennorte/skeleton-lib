@@ -5,7 +5,9 @@
  * MIT Licensed
  */
 
-define(['./util/namespace'], function(Namespace){
+define([
+  './util/namespace'
+], function(Namespace){
 
   var socket = null;
 
