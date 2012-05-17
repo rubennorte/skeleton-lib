@@ -7,7 +7,7 @@
 
 define([
   '../../view',
-  'underscore'
+  'use!underscore'
 ], function(View, _){
   
   var ListView = View.extend({

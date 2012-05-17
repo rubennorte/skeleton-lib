@@ -6,7 +6,7 @@
  */
  
 define([
-  'underscore',
+  'use!underscore',
 ], function( _){
   
   var UnderscoreTemplateEngine = {

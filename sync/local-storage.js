@@ -5,7 +5,7 @@
  * MIT Licensed
  */
 
-define(['underscore', './util/namespace'], function(_, Namespace){
+define(['use!underscore', './util/namespace'], function(_, Namespace){
 
   function syncCollection(method, model, options){
     var url = Namespace.get(model, options);

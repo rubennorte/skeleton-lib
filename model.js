@@ -6,7 +6,7 @@
  */
 
 define([
-  'backbone',
+  'use!backbone',
   './sync/socket.io'
 ], function(Backbone, IOSync){
   

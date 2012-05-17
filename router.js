@@ -6,7 +6,7 @@
  */
 
 define([
-  'backbone'
+  'use!backbone'
 ], function(Backbone){
 
   var Router = Backbone.Router.extend({

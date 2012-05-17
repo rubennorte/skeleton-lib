@@ -8,8 +8,8 @@
 define([
   'require',
   'config',
-  'backbone',
-  'underscore',
+  'use!backbone',
+  'use!underscore',
   './util/text',
   './util/url'
 ], function(require, config, Backbone, _, Text, URL){

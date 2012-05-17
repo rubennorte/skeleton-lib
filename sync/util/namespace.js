@@ -5,7 +5,7 @@
  * MIT Licensed
  */
 
-define(['underscore'], function(_){
+define(['use!underscore'], function(_){
   return {
     get: function(model){
       var url = _.result(model, 'url');

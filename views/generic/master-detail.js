@@ -7,7 +7,7 @@
  
 define([
   './list',
-  'underscore',
+  'use!underscore',
 ], function(ListView, _){
   
   var MasterDetailView = ListView.extend({

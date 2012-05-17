@@ -7,7 +7,7 @@
 
 define([
   'config',
-  'underscore',
+  'use!underscore',
   '../../i18n',
   '../../util/text',
   '../../util/url'

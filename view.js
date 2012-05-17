@@ -6,8 +6,8 @@
  */
 
 define([
-  'backbone',
-  'underscore',
+  'use!backbone',
+  'use!underscore',
   'config',
   './i18n',
   './views/helpers/default',
