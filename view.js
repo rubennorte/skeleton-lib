@@ -51,6 +51,14 @@ define([
     globals: _.defaults({}, DefaultHelpers),
 
     defaultTemplateEngine: UnderscoreTemplateEngine,
+
+    compileTemplate: function(template, templateEngine){
+
+      // If templateEngine is not defined, use default
+      templateEngine || (templateEngine = this.defaultTemplateEngine);
+
+      return templateEngine.compile(template);
+    },
     
     renderTemplate: function(template, locals, templateEngine){
 

@@ -11,6 +11,10 @@ define([
   
   var UnderscoreTemplateEngine = {
 
+    compile: function(template){
+      return _.template(template);
+    },
+
     render: function(template, context){
       if (typeof(template) == 'function') return template(context);
       else return _.template(template, context);
