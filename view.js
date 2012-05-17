@@ -25,7 +25,7 @@ define([
       return this;
     },
 
-    renderIfRendered: function(){
+    refresh: function(){
       if (this._rendered)
         this.render();
       return this;
