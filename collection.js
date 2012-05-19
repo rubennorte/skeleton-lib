@@ -13,14 +13,23 @@ define([
 
   var Collection = Backbone.Collection.extend({
 
-    load: function(options){
-      // TODO do it better!
-      if (this.size() == 0){
-        this.fetch(options);
-      } else {
+    fetch: function(options){
+      options = options ? _.clone(options) : {};
+
+      // If not reload and collection is not empty, sync is not necessary
+      if (options.reload === undefined) options.reload = true;
+      if (!options.reload && this.size() > 0){
         options.success && options.success(this);
+        return;
       }
-      return this;
+
+      // Send stored data (for pagination, filtering, etc.)
+      if (!options.data && !_(this._data).isEmpty()){
+        options.data = this._data;
+      }
+
+      // super.fetch(options);
+      Backbone.Collection.prototype.fetch.call(this, options);
     },
 
     /**
