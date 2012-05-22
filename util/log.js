@@ -38,7 +38,8 @@ define([
     INFO:   2,
     WARN:   3,
     ERROR:  4,
-    LOG:    5,   // Force log
+    LOG:    5,  // Force log
+    SILENT: 6   // No log message is printed at this level
   };
 
   // Which methods correspond this log methods to
