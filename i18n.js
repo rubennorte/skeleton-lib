@@ -23,7 +23,7 @@ define([
     // Translate function
     t: function(text){
 
-      if ('object' == typeof(text)){
+      if (text && typeof(text) == 'object'){
         // Translations present in parameter
         if (this._locale in text) text = text[this._locale];
         else text = text[config.i18n.defaultLocale];
@@ -32,7 +32,7 @@ define([
         if (!this._translations[text] && !this._missingTranslations[text]){
           this._missingTranslations[text] = (this._missingTranslations[text] || 0) + 1;
           this._translations[text] = text;
-          console.info('I18n', 't', 'Missing translation for key "%s"', text);
+          console.info('I18n', 't', 'Missing translation for key', text);
         }
         text = this._translations[text] || text;
       }
@@ -81,7 +81,7 @@ define([
 
     _setLocaleAndTranslations: function(locale, translations, callback){
       if (this._locale != locale || !_.isEqual(this._translations, translations)){
-        console.info('I18n', 'setLocale', 'Locale set to "%s"', locale);
+        console.info('I18n', 'setLocale', 'Locale set to', locale);
         this._locale = locale;
         this._translations = translations;
         this._missingTranslations = {};
