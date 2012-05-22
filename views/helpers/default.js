@@ -13,6 +13,18 @@ define([
   '../../util/url'
 ], function(config, _, I18n, textUtils, url){
 
+  function joinUntilHost(){
+    var fragment,
+        fragments = _(arguments).toArray(),
+        urlStr = '';
+    while (fragment = fragments.pop()){
+      var parsed = url.parseUri(fragment);
+      if (parsed.host) return url.join(fragment, urlStr);
+      else urlStr = url.join(fragment, urlStr);
+    }
+    return urlStr;
+  }
+
   return {
 
     config: config,
@@ -25,19 +37,21 @@ define([
     text: textUtils,
 
     urlTo: function(dst){
-      return url.join(config.url.root, dst);
+      return joinUntilHost(config.url.root, dst);
     },
 
     assetUrl: function(src){
-      return url.join(config.url.assets, src);
+      return joinUntilHost(config.url.root, config.url.assets, src);
     },
 
     imageUrl: function(src){
-      return url.join(config.url.images, src);
+      return joinUntilHost(config.url.root, config.url.assets,
+        config.url.images, src);
     },
 
     stylesheetUrl: function(src){
-      return url.join(config.url.stylesheets, src);
+      return joinUntilHost(config.url.root, config.url.assets,
+        config.url.stylesheets, src);
     }
   };
 });

@@ -11,12 +11,12 @@ define(function(){
 
   config.url = {};
   config.url.root = '/';
-  config.url.assets = config.url.root + 'public/';
-  config.url.images = config.url.assets + 'images/';
-  config.url.stylesheets = config.url.assets + 'stylesheets/';
+  config.url.assets = '/';
+  config.url.images = 'images';
+  config.url.stylesheets = 'stylesheets';
   
   config.i18n = {};
-  config.i18n.loadPath = config.url.assets + 'data/locales/';
+  config.i18n.loadPath = 'data/locales/';
   config.i18n.defaultLocale = 'en';
 
   return config;
