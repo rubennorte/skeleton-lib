@@ -44,9 +44,13 @@ define([
 
     startSync: function(model){
       console.trace('SocketIOSync', 'startSync', this, model);
+      
+      // If model is not defined assume that it has been extended
+      // with this module
+      if (!model) model = this;
 
       if (model.models){
-        // Is collection
+        // It's a collection
         model._serverCreate = function(data){
           if (!data) return;
 
@@ -71,7 +75,7 @@ define([
         socket.on(namespace + ':create', model._serverCreate);
 
       } else {
-        // Is model
+        // It's a model
 
         model._serverChange = function(data){
           model.set(data);
@@ -115,6 +119,8 @@ define([
 
     stopSync: function(model){
       console.trace('SocketIOSync', 'stopSync', this, model);
+
+      if (!model) model = this;
 
       var namespace = Namespace.get(model);
 
