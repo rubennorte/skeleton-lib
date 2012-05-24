@@ -7,6 +7,9 @@
 
 define({
 
+  /**
+   * Joins the specified url fragments in another valid url fragment
+   */
   join: function(url){
     // Remove trailing slash
     if (url[url.length-1] == '/') url = url.slice(0, -1);
@@ -24,6 +27,9 @@ define({
     return url;
   },
 
+  /**
+   * Parses the specified URI and returns an object containing its parts
+   */
   parseUri: function(str){
     var PARSER = /^(?:([^:\/?#]+):)?(?:\/\/((?:(([^:@]*)(?::([^:@]*))?)?@)?([^:\/?#]*)(?::(\d*))?))?((((?:[^?#\/]*\/)*)([^?#]*))(?:\?([^#]*))?(?:#(.*))?)/;
     var m   = PARSER.exec(str),

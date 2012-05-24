@@ -10,67 +10,96 @@ define([
   './util/namespace'
 ], function(_, Namespace){
 
+  /**
+   * Reads the collection data from localStorage
+   */
   function syncCollection(method, model, options){
-    var url = Namespace.get(model, options);
+    // Get the namespace of the collection
+    var ns = Namespace.get(model, options);
 
-    if (!localStorage[url]) localStorage[url] = '{}';
+    // If the collection is not already stored in localStorage, return an
+    // empty collection
+    if (!localStorage[ns]) localStorage[ns] = '{}';
 
-    var collection = JSON.parse(localStorage[url]),
-        models = _(collection).values();
+    // Parse the collection JSON data from localStorage
+    var collection = JSON.parse(localStorage[ns]);
 
+    // Get the models, stored as the values of the collection
+    models = _(collection).values();
+
+    // Call the success callback with read models
     options.success && options.success(models);
 
+    // TODO return something that implements the promise interface
     return {};
   }
 
   function syncModel(method, model, options){
-    var url = Namespace.get(model, options);
+    // Get the namespace of the model
+    var ns = Namespace.get(model, options);
 
-    if (!localStorage[url]) localStorage[url] = '{}';
+    // Read the collection associated with the namespace
+    if (!localStorage[ns]) localStorage[ns] = '{}';
 
-    var collection = JSON.parse(localStorage[url]),
-        modelData;
+    // Parse the collection JSON data from localStorage
+    var collection = JSON.parse(localStorage[ns]),
+    var modelData;
 
     if (method == 'read'){
       // Readonly method
+
+      // Retrieve the model data from the collection
       modelData = collection[model.id];
       if (modelData) options.success && options.success(modelData);
       else options.error && options.error('Not found');
 
     } else {
       // Modifying method
+
+      // Retrieve the model data from the collection
       modelData = collection[model.id];
 
-      if (method == 'create'){
-        modelData = model.toJSON();
-        modelData.id = generateId(collection);
-        collection[modelData.id] = modelData;
+      // Update the model data from its JSON representation
+      modelData = model.toJSON();
 
-        options.success && options.success(modelData);
+      if (method == 'create'){
+        // Assign a new id to the model
+        modelData.id = generateId(collection);
+        // Store the model in the collection
+        collection[modelData.id] = modelData;
 
       } else if (method == 'update'){
 
-        modelData = model.toJSON();
-        collection[model.id] = modelData;
-
+        // If the model was not stored in the collection,
+        // call the error callback
         if (!modelData){
-          options.error && options.error('Not found');
-        } else {
-          options.success && options.success(modelData);
+          options.error
+            && options.error('Model with id ' + model.id + ' not found');
+          return;
         }
 
+        // Update the model in the collection
+        collection[model.id] = modelData;
+
       } else if (method == 'delete'){
+        // Delete the model from the collection
         delete collection[model.id];
       }
 
-      // Update stored collection
+      // Store modified collection in localStorage
       localStorage[url] = JSON.stringify(collection);
-
+      
+      // Call the success callback
+      options.success && options.success(modelData);
     }
 
+    // TODO return something that implements the promise interface
     return {};
   }
 
+  /**
+   * Generates a positive integer id for a new model in the specified collection
+   */
   function generateId(collection){
     // Generate id by incrementing the maximum numeric id
     // found in the collection (1 otherwise).
@@ -85,8 +114,14 @@ define([
     return numericIds.length > 0 ? _(numericIds).max() + 1 : 1;
   }
 
+  /**
+   * Module definition
+   */
   var LocalStorageSync = {
     
+    /**
+     * Backbone sync implementation using localStorage
+     */
     sync: function(method, model, options){
       console.debug('LocalStorageSync', 'sync', this, arguments);
 
@@ -97,10 +132,14 @@ define([
         return false;
       }
 
+      // Call the appropiate function according to the type of model
       if (model.models) return syncCollection(method, model, options);
       else return syncModel(method, model, options);
     },
 
+    /**
+     * Determines if the browser supports HTML5 local storage
+     */
     isSupported: function(){
       return typeof(Storage) !== "undefined"
         && typeof(localStorage) !== 'undefined';

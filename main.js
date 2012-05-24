@@ -15,7 +15,6 @@ define([
   /**
    * Skeleton namespace
    */
-
   var Skeleton = {
     Model: Model,
     Collection: Collection,

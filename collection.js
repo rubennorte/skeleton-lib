@@ -11,8 +11,15 @@ define([
   './sync/socket.io'
 ], function(Backbone, _, IOSync){
 
+  /**
+   * Skeleton collection definition
+   */
   var Collection = Backbone.Collection.extend({
 
+    /**
+     * Backbone fetch function, redefined to provide support for reload option
+     * and send the content of the _data property if the data option is not set
+     */
     fetch: function(options){
       options = options ? _.clone(options) : {};
 
@@ -20,6 +27,7 @@ define([
       if (options.reload === undefined) options.reload = true;
       if (!options.reload && this.size() > 0){
         options.success && options.success(this);
+        // TODO return something that implements the promise interface
         return;
       }
 
@@ -31,7 +39,7 @@ define([
       // super.fetch(options);
       Backbone.Collection.prototype.fetch.call(this, options);
     }
-    
+
   });
 
   return Collection;

@@ -8,7 +8,14 @@
 define([
   'use!underscore'
 ], function(_){
+
   return {
+
+    /**
+     * Returns the namespace of a model or collection
+     * by removing the extra slashes and the model id (if corresponds)
+     * from its url
+     */
     get: function(model){
       var url = _.result(model, 'url');
 
@@ -26,5 +33,7 @@ define([
 
       return url;
     }
+
   };
+
 });

@@ -9,8 +9,15 @@ define([
   'use!backbone'
 ], function(Backbone){
 
+  /**
+   * Skeleton router definition
+   */
   var Router = Backbone.Router.extend({
 
+    /**
+     * Generates a URL replacing the route params with the values of those
+     * params in the specified object
+     */
     generateFragment: function(route, params){
       return route.replace(/:(\w+)/g, function(match, paramName){
         return params[paramName];

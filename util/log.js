@@ -12,7 +12,7 @@ define([
   // The "window" object
   var root = this;
 
-  // If console is undefined, define an does-nothing one (IE hack)
+  // If console is undefined, define one with all functions as noop (IE hack)
   if (!root.console){
     root.console = {
       setLevel: noop,
@@ -28,7 +28,7 @@ define([
     return root.console;
   }
 
-  // Reference to the console object
+  // Reference to the original console object
   var console = root.console;
 
   // Log levels
@@ -46,33 +46,42 @@ define([
   var METHOD_MAPPING = ['debug', 'debug', 'info', 'warn', 'error', 'log'],
       LOG_TAGS = ['T', 'D', 'I', 'W', 'E', 'L'];
 
-  var logLevel = 4; // Error by default
+  var logLevel = LOG_LEVELS.ERROR;
 
   /**
    * Console redefinition
    */
-
   root.console = {
 
     // Original console
     _orig: console,
    
-    // Date formatting function
-    // Defined in the console object to allow users to redefine it
+    /**
+     * Returns the date that will be printed on the log
+     */
     formatDate: function(date){
       return Utils.sprintf('%02d/%02d/%02d - %02d:%02d:%02d',
         date.getDate(), date.getMonth()+1, parseInt((''+date.getFullYear()).substr(2)),
         date.getHours(), date.getMinutes(), date.getSeconds());
     },
 
+    /**
+     * Change the current log level
+     */
     setLevel: function(level){
       logLevel = level;
     },
 
+    /**
+     * Determines if a log message with the specified level would be printed
+     */
     isLoggable: function(level){
       return logLevel <= level;
     },
 
+    /**
+     * Logs the message unless the log is silenced
+     */
     log: function(){
       return this._doLog(this.LOG, arguments);
     },

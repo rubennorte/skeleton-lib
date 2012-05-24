@@ -9,12 +9,23 @@ define([
   'use!underscore',
 ], function( _){
   
+  /**
+   * Module definition
+   */
   var UnderscoreTemplateEngine = {
 
+    /**
+     * Returns a compiled version of the specified template, which can be
+     * used in render function
+     */
     compile: function(template){
       return _.template(template);
     },
 
+    /**
+     * Renders the specified template with the specified context and returns
+     * the resulting string
+     */
     render: function(template, context){
       if (typeof(template) == 'function') return template(context);
       else return _.template(template, context);

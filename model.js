@@ -10,8 +10,15 @@ define([
   './sync/socket.io'
 ], function(Backbone, IOSync){
   
+  /**
+   * Skeleton model definition
+   */
   var Model = Backbone.Model.extend({
 
+    /**
+     * Backbone fetch function, redefined to provide support for
+     * persistAttributes and discardAttributes options.
+     */
     toJSON: function(key, value, options){
       var json = Backbone.Model.prototype.toJSON.apply(this, arguments);
 
@@ -37,14 +44,21 @@ define([
 
   });
 
-  function selectKeys(object, attributes){
-    if (_(attributes).isArray()){
-      return attributes;
-    } else if (_(attributes).isFunction()){
+  /**
+   * Returns the selected keys of the specified object.
+   * If selected is an array, the selected keys are those.
+   * If selected is an object, the selected keys are which has non-falsy values.
+   * If selected is a function, the selected keys are which makes the function
+   * return a non-falsy value.
+   */
+  function selectKeys(object, selected){
+    if (_(selected).isArray()){
+      return selected;
+    } else if (_(selected).isFunction()){
       return _(object).chain().map(function(value, key){
-        return attributes(key, value) ? key : null;
+        return selected(key, value) ? key : null;
       }).compact().value();
-    } else if (_(attributes).isObject()){
+    } else if (_(selected).isObject()){
       return _(object).chain().map(function(value, key){
         return value ? key : null;
       }).compact().value();

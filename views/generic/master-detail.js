@@ -10,16 +10,23 @@ define([
   'use!underscore',
 ], function(ListView, _){
   
+  /**
+   * Skeleton master-detail view definition
+   */
   var MasterDetailView = ListView.extend({
 
-    /*
-     *  Available options:
-     *
-     *    DetailView,     (required)
-     *    detailSelector, (required)
-     *    cacheViews
+    /**
+     * Initializes the msster-detail view
+     * The available options are (additionally to the list view options):
+     * - DetailView (required)      View class for the selected items
+     * - detailSelector (required)  jQuery selector to determine which element
+     *                              will be the detail views displayed in
+     * - cacheViews                 Determines if the detail views must be
+                                    cached (default: false)
+     * - visibilityAttr             Determines which attribute of the models
+     *                              will determine that it's selected
+     *                              (default: 'visible')
      */
-
     initialize: function(){
       //super.initialize();
       ListView.prototype.initialize.apply(this, arguments);

@@ -9,12 +9,14 @@ define(function(){
 
   var config = {};
 
+  // URL related config
   config.url = {};
   config.url.root = '/';
   config.url.assets = '/';
   config.url.images = 'images';
   config.url.stylesheets = 'stylesheets';
   
+  // I18n related config
   config.i18n = {};
   config.i18n.loadPath = 'data/locales/';
   config.i18n.defaultLocale = 'en';
