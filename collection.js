@@ -30,25 +30,8 @@ define([
 
       // super.fetch(options);
       Backbone.Collection.prototype.fetch.call(this, options);
-    },
-
-    /**
-     * IOSync shortcuts
-     */
-
-    startSync: function(){
-      IOSync.startSync(this);
-    },
-
-    stopSync: function(){
-      IOSync.stopSync(this);
     }
-
-  }, {
-
-    // IOSync shortcut
-    ioSync: _.bind(IOSync.sync, IOSync)
-
+    
   });
 
   return Collection;
