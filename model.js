@@ -15,21 +15,41 @@ define([
     toJSON: function(key, value, options){
       var json = Backbone.Model.prototype.toJSON.apply(this, arguments);
 
-      // Check if persistAttributes or discardAttributes properties are defined
-      // and return proper attributes in that case
-      if (_.isArray(this.persistAttributes)){
-        json = _(json).pick(this.persistAttributes);
-      } else if (_.isArray(this.discardAttributes)){
-        for (var i in json){
-          if (_(this.discardAttributes).include(i))
-            delete json[i];
+      if (this.persistAttributes || this.discardAttributes){
+
+        // If persistAttributes is defined, keep only selected attributes
+        var persist = selectKeys(json, this.persistAttributes);
+        if (!persist)
+          persist = _(json).keys();
+
+        // If discardAttributes is defined, remove selected attributes
+        var discard = selectKeys(json, this.discardAttributes);
+        if (discard){
+          persist = _(persist).difference(discard);
         }
+      
+        // Pick the selected attributes
+        json = _(json).pick(persist);
       }
 
       return json;
     }
 
   });
+
+  function selectKeys(object, attributes){
+    if (_(attributes).isArray()){
+      return attributes;
+    } else if (_(attributes).isFunction()){
+      return _(object).chain().map(function(value, key){
+        return attributes(key, value) ? key : null;
+      }).compact().value();
+    } else if (_(attributes).isObject()){
+      return _(object).chain().map(function(value, key){
+        return value ? key : null;
+      }).compact().value();
+    }
+  }
 
   return Model;
   
