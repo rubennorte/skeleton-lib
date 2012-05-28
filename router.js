@@ -6,13 +6,25 @@
  */
 
 define([
-  'use!backbone'
-], function(Backbone){
+  'use!backbone',
+  'config'
+], function(Backbone, config){
 
   /**
    * Skeleton router definition
    */
   var Router = Backbone.Router.extend({
+
+    start: function(options){
+      // Set default options
+      options || (options = {});
+      if (typeof(options.root) == 'undefined')
+        options.root = config.url.root;
+      if (typeof(options.pushState) == 'undefined')
+        options.pushState = true;
+
+      Backbone.history.start(options);
+    },
 
     /**
      * Generates a URL replacing the route params with the values of those
