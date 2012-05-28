@@ -10,9 +10,9 @@ define([
   'config',
   'use!backbone',
   'use!underscore',
-  './util/text',
+  'use!underscore.string',
   './util/url'
-], function(require, config, Backbone, _, Text, URL){
+], function(require, config, Backbone, _, _s, URL){
 
   /**
    * Skeleton I18n module definition
@@ -58,7 +58,7 @@ define([
 
       // If the key is not the only specified parameter, return interpolated
       if (arguments.length > 1)
-        return Text.sprintf.apply(null, arguments);
+        return _s.sprintf.apply(null, arguments);
       
       return text;
     },

@@ -8,10 +8,11 @@
 define([
   'config',
   'use!underscore',
+  // Used through underscore reference
+  'use!underscore.string',
   '../../i18n',
-  '../../util/text',
   '../../util/url'
-], function(config, _, I18n, textUtils, url){
+], function(config, _, _s, I18n, url){
 
   /**
    * Joins the specified url fragments, starting from the end, util the current
@@ -41,9 +42,6 @@ define([
     // I18n functions
     t: I18n.t,
     l: I18n.l,
-
-    // Text utils
-    text: textUtils,
 
     /**
      * Returns the url of the specified path relative to the app root url

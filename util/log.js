@@ -6,8 +6,8 @@
  */
 
 define([
-  './text'
-], function(Utils){
+  'use!underscore.string'
+], function(_s){
 
   // The "window" object
   var root = this;
@@ -60,7 +60,7 @@ define([
      * Returns the date that will be printed on the log
      */
     formatDate: function(date){
-      return Utils.sprintf('%02d/%02d/%02d - %02d:%02d:%02d',
+      return _s.sprintf('%02d/%02d/%02d - %02d:%02d:%02d',
         date.getDate(), date.getMonth()+1, parseInt((''+date.getFullYear()).substr(2)),
         date.getHours(), date.getMinutes(), date.getSeconds());
     },
@@ -111,7 +111,7 @@ define([
         var method = METHOD_MAPPING[level];
 
         if (typeof(args[0]) == 'string'){
-          args[0] = Utils.sprintf('%s | %s | %s',
+          args[0] = _s.sprintf('%s | %s | %s',
           this.formatDate(new Date()),
           LOG_TAGS[level],
           args[0]);
