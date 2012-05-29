@@ -7,9 +7,8 @@
 
 define([
   'use!backbone',
-  'use!underscore',
-  './sync/socket.io'
-], function(Backbone, _, IOSync){
+  'use!underscore'
+], function(Backbone, _){
 
   /**
    * Skeleton collection definition

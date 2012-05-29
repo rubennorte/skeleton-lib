@@ -6,9 +6,8 @@
  */
 
 define([
-  'use!backbone',
-  './sync/socket.io'
-], function(Backbone, IOSync){
+  'use!backbone'
+], function(Backbone){
   
   /**
    * Skeleton model definition
