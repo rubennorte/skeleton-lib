@@ -57,6 +57,22 @@ define([
         var content = View.renderTemplate(template, locals, templateEngine);
         this.$el.html(content);
       }
+    },
+
+    /**
+     * Removes the view from the DOM and unbinds the attached event handlers
+     */
+    remove: function(){
+      this.unbindEvents();
+      return Backbone.View.prototype.remove.call(this);
+    },
+
+    /**
+     * Unbinds all events bound with the context of this view
+     */
+    unbindEvents: function(){
+      if (this.model) this.model.off(null, null, this);
+      if (this.collection) this.collection.off(null, null, this);
     }
 
   }, {
