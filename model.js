@@ -55,7 +55,7 @@ define([
 
       // return super.fetch(options);
       return Backbone.Collection.prototype.fetch.call(this, options);
-    }
+    },
 
     /**
      * Returns true if the model is being loaded from the server
