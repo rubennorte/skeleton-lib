@@ -25,7 +25,7 @@ define([
 
         if (model.isNew && !model.isNew()){
           // Remove last part (id)
-          parts.splice(parts.length-1);
+          parts.splice(parts.length-1, 1);
         }
 
         url = parts.join('/');

@@ -43,7 +43,7 @@ define([
   };
 
   // Which methods correspond this log methods to
-  var METHOD_MAPPING = ['debug', 'debug', 'info', 'warn', 'error', 'log'],
+  var METHOD_MAPPING = ['trace', 'debug', 'info', 'warn', 'error', 'log'],
       LOG_TAGS = ['T', 'D', 'I', 'W', 'E', 'L'];
 
   var logLevel = LOG_LEVELS.ERROR;
@@ -95,15 +95,15 @@ define([
     },
     
     info: function(){
-      return this._doLog(LOG_LEVELS.INFO, arguments);
+      return this._doLog(this.INFO, arguments);
     },
     
     warn: function(){
-      return this._doLog(LOG_LEVELS.WARN, arguments);
+      return this._doLog(this.WARN, arguments);
     },
     
     error: function(){
-      return this._doLog(LOG_LEVELS.ERROR, arguments);
+      return this._doLog(this.ERROR, arguments);
     },
 
     _doLog: function(level, args){
@@ -117,7 +117,13 @@ define([
           args[0]);
         }
 
-        return console[method].apply(console, args);
+        // Look for the closest available log method
+        for (var i=level; i<METHOD_MAPPING.length; i++){
+          if (typeof(console[method]) == 'function'){
+            return console[method].apply(console, args);
+          }
+        }
+        
       }
       return false;
     }
