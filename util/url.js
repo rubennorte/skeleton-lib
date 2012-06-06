@@ -12,14 +12,14 @@ define({
    */
   join: function(url){
     // Remove trailing slash
-    if (url[url.length-1] == '/') url = url.slice(0, -1);
+    if (url.charAt(url.length-1) == '/') url = url.slice(0, -1);
 
     for (var i=1; i<arguments.length; i++){
       var part = arguments[i];
       // Add leading slash
-      if (part[0] != '/') part = '/' + part;
+      if (part.charAt(0) != '/') part = '/' + part;
       // Remove trailing slash
-      if (part[part.length-1] == '/') part = part.slice(0, -1);
+      if (part.charAt(part.length-1) == '/') part = part.slice(0, -1);
 
       url += part;
     }
