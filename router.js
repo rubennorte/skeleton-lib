@@ -30,10 +30,23 @@ define([
      * Generates a URL replacing the route params with the values of those
      * params in the specified object
      */
-    generateFragment: function(route, params){
+    generateRoute: function(route, params){
       return route.replace(/:(\w+)/g, function(match, paramName){
         return params[paramName];
       });
+    },
+
+    /**
+     * Returns the current route
+     */
+    getCurrentRoute: function(){
+      var current = Backbone.history.fragment,
+          root = Backbone.history.options.root;
+      // Fixes error in backbone
+      if (root && current.indexOf(root) == 0){
+        current = current.substr(root.length);
+      }
+      return current;
     }
 
   });
