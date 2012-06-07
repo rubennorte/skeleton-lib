@@ -94,12 +94,16 @@ define([
       // TODO Add support for region localization
       locale = locale.substr(0,2).toLowerCase();
 
-      // If the translations are defined, we don't have to load it and can
+      // If the locale is the current one, return immediatelly
+      if (locale == this.getLocale())
+        return callback && callback();
+
+      // If the translations are defined, we don't have to load them and can
       // set the locale inmediately
       if (translations){
         this._setLocaleAndTranslations(locale, translations, callback);
       } else {
-        // Otherwise, we have to load it. We load it as an AMD module to cache it
+        // Otherwise, we have to load them (as an AMD module to cache)
         var self = this;
         require(['json!' + this._getLocaleUrl(locale)], function(newTranslations){
           self._setLocaleAndTranslations(locale, newTranslations, callback);
