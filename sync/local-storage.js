@@ -42,7 +42,7 @@ define([
     if (!localStorage[ns]) localStorage[ns] = '{}';
 
     // Parse the collection JSON data from localStorage
-    var collection = JSON.parse(localStorage[ns]),
+    var collection = JSON.parse(localStorage[ns]);
     var modelData;
 
     if (method == 'read'){
