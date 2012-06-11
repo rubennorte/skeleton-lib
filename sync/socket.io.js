@@ -115,7 +115,7 @@ define([
         var ns;
 
         function bindEvents(){
-          ns = Namespace.get(model);
+          ns = Namespace.get(model) + '/' + model.id;
           var updateEvent = ns + ':update',
               deleteEvent = ns + ':delete';
           socket.on(updateEvent, model._serverChange);
