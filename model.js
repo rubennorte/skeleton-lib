@@ -54,7 +54,7 @@ define([
       this.trigger('syncing', this, options);
 
       // return super.fetch(options);
-      return Backbone.Collection.prototype.fetch.call(this, options);
+      return Backbone.Model.prototype.fetch.call(this, options);
     },
 
     /**
