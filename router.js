@@ -47,6 +47,13 @@ define([
         current = current.substr(root.length);
       }
       return current;
+    },
+
+    /**
+     * Triggers again the handler for the current route
+     */
+    refresh: function(){
+      Backbone.history.loadUrl(this.getCurrentRoute());
     }
 
   });
