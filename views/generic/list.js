@@ -150,7 +150,7 @@ define([
       this.unbindEvents();
       
       // super.remove();
-      View.prototype.apply(this, arguments);
+      View.prototype.remove.apply(this, arguments);
     },
 
     unbindEvents: function(){
