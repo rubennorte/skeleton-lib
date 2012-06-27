@@ -7,7 +7,7 @@
  
 define([
   './list',
-  'use!underscore',
+  'use!underscore'
 ], function(ListView, _){
   
   /**

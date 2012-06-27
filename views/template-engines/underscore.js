@@ -6,8 +6,8 @@
  */
  
 define([
-  'use!underscore',
-], function( _){
+  'use!underscore'
+], function(_){
   
   /**
    * Module definition

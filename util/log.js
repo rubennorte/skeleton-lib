@@ -14,6 +14,7 @@ define([
 
   // If console is undefined, define one with all functions as noop (IE hack)
   if (!root.console){
+    var noop = function(){};
     root.console = {
       setLevel: noop,
       isLoggable: noop,
