@@ -6,7 +6,7 @@
  */
 
 define([
-  'use!underscore'
+  'underscore'
 ], function(_){
 
   function getTotalPages(count, perPage){

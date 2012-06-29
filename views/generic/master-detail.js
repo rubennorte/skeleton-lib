@@ -7,7 +7,7 @@
  
 define([
   './list',
-  'use!underscore'
+  'underscore'
 ], function(ListView, _){
   
   /**
@@ -16,7 +16,7 @@ define([
   var MasterDetailView = ListView.extend({
 
     /**
-     * Initializes the msster-detail view
+     * Initializes the master-detail view
      * The available options are (additionally to the list view options):
      * - DetailView (required)      View class for the selected items
      * - detailSelector (required)  jQuery selector to determine which element

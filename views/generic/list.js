@@ -7,7 +7,7 @@
 
 define([
   '../../view',
-  'use!underscore'
+  'underscore'
 ], function(View, _){
   
   /**

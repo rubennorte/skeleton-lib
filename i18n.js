@@ -8,9 +8,9 @@
 define([
   'require',
   'config',
-  'use!backbone',
-  'use!underscore',
-  'use!underscore.string',
+  'backbone',
+  'underscore',
+  'underscore.string',
   './util/url'
 ], function(require, config, Backbone, _, _s, URL){
 

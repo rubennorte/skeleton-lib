@@ -6,7 +6,7 @@
  */
 
 define([
-  'use!underscore',
+  'underscore',
   './util/namespace'
 ], function(_, Namespace){
 

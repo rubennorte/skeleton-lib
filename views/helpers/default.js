@@ -7,9 +7,9 @@
 
 define([
   'config',
-  'use!underscore',
+  'underscore',
   // Used through underscore reference
-  'use!underscore.string',
+  'underscore.string',
   '../../i18n',
   '../../util/url'
 ], function(config, _, _s, I18n, url){

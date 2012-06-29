@@ -6,7 +6,7 @@
  */
 
 define([
-  'use!backbone',
+  'backbone',
   'config'
 ], function(Backbone, config){
 

@@ -6,8 +6,8 @@
  */
 
 define([
-  'use!backbone',
-  'use!underscore'
+  'backbone',
+  'underscore'
 ], function(Backbone, _){
   
   /**

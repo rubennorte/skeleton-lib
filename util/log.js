@@ -6,7 +6,7 @@
  */
 
 define([
-  'use!underscore.string'
+  'underscore.string'
 ], function(_s){
 
   // The "window" object
