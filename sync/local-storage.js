@@ -87,7 +87,7 @@ define([
       }
 
       // Store modified collection in localStorage
-      localStorage[url] = JSON.stringify(collection);
+      localStorage[ns] = JSON.stringify(collection);
       
       // Call the success callback
       options.success && options.success(modelData);
