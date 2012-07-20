@@ -22,7 +22,7 @@ define([
       // Set default options
       options || (options = {});
       if (typeof(options.root) == 'undefined')
-        options.root = config.url.root;
+        options.root = URL.parseUri(config.url.root).path;
       if (typeof(options.pushState) == 'undefined')
         options.pushState = true;
 
