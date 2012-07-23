@@ -7,8 +7,9 @@
 
 define([
   'backbone',
-  'config'
-], function(Backbone, config){
+  'config',
+  './util/url'
+], function(Backbone, config, URL){
 
   // Create the history object if it's not created, as Backbone does
   Backbone.history || (Backbone.history = new Backbone.History);
