@@ -13,18 +13,21 @@ define([
 
     /**
      * Returns the namespace of a model or collection
-     * by removing the extra slashes and the model id (if corresponds)
-     * from its url
+     * by removing the leading slash (if any)
+     * and the model id (if corresponds) from its url
      */
     get: function(model){
       var url = _.result(model, 'url');
 
       if (url){
-        // Remove leading slashes
-        var parts = _(url.split('/')).compact();
+        // Remove leading slash
+        if (url.indexOf('/') == 0)
+          url = url.substr(1);
+        
+        var parts = url.split('/');
 
         if (model.isNew && !model.isNew()){
-          // Remove last part (id)
+          // Remove last part (with id)
           parts.splice(parts.length-1, 1);
         }
 
