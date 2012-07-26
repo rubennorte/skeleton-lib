@@ -6,9 +6,8 @@
  */
 
 define([
-  'backbone',
-  'config'
-], function(Backbone, config){
+  'backbone'
+], function(Backbone){
 
   /**
    * Skeleton router definition
