@@ -73,6 +73,19 @@ define([
     unbindEvents: function(){
       if (this.model) this.model.off(null, null, this);
       if (this.collection) this.collection.off(null, null, this);
+    },
+
+    /**
+     * Backbone _configure function redefined to attach the template
+     * option directly to the view
+     */
+    _configure: function(){
+      // super._configure();
+      Backbone.View.prototype._configure.apply(this, arguments);
+
+      if (this.options.template && !this.template){
+        this.template = this.options.template;
+      }
     }
 
   }, {
