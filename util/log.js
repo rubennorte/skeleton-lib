@@ -9,6 +9,8 @@ define([
   'underscore.string'
 ], function(_s){
 
+  'use strict';
+
   // The "window" object
   var root = this;
 

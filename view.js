@@ -14,6 +14,8 @@ define([
   './views/template-engines/underscore'
 ], function(Backbone, _, Config, I18n, DefaultHelpers, UnderscoreTemplateEngine){
 
+  'use strict';
+
   /**
    * Skeleton view definition
    */

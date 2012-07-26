@@ -10,6 +10,8 @@ define([
   'underscore'
 ], function(ListView, _){
   
+  'use strict';
+  
   /**
    * Skeleton master-detail view definition
    */

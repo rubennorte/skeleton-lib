@@ -10,6 +10,8 @@ define([
   'underscore'
 ], function(Backbone, _){
   
+  'use strict';
+  
   /**
    * Skeleton model definition
    */

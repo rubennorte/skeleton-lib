@@ -10,6 +10,8 @@ define([
   './util/namespace'
 ], function(_, Namespace){
 
+  'use strict';
+
   /**
    * Reads the collection data from localStorage
    */

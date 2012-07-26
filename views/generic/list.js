@@ -10,6 +10,8 @@ define([
   'underscore'
 ], function(View, _){
   
+  'use strict';
+  
   /**
    * Skeleton list view definition
    */

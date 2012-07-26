@@ -14,6 +14,8 @@ define([
   './util/url'
 ], function(require, config, Backbone, _, _s, URL){
 
+  'use strict';
+
   var rLocale = /^([a-zA-Z]{2})([-_]([a-zA-Z]{2}))?$/,
       rStrictLocale = /^([a-z]{2})([_]([A-Z]{2}))?$/;
 

@@ -9,6 +9,8 @@ define([
   'underscore'
 ], function(_){
 
+  'use strict';
+
   function getTotalPages(count, perPage){
     // If the collection is empty, there's ONE empty page
     return Math.ceil(count/perPage) || 1;

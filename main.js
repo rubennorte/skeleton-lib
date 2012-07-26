@@ -12,6 +12,8 @@ define([
   './i18n'
 ], function(Model, Collection, View, I18n){
 
+  'use strict';
+
   /**
    * Skeleton namespace
    */

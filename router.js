@@ -9,6 +9,8 @@ define([
   'backbone'
 ], function(Backbone){
 
+  'use strict';
+
   /**
    * Skeleton router definition
    */

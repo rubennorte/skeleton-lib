@@ -9,6 +9,8 @@ define([
   './util/namespace'
 ], function(Namespace){
 
+  'use strict';
+
   // The socket used to sync
   var socket = null;
 

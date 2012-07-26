@@ -7,6 +7,8 @@
 
 define(function(){
 
+  'use strict';
+
   var config = {};
 
   // URL related config

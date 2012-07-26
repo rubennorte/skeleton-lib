@@ -10,6 +10,8 @@ define([
   'underscore'
 ], function(View, _){
   
+  'use strict';
+  
   var CompositeView = View.extend({
 
     setView: function(selector, view){

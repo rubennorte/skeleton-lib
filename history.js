@@ -11,6 +11,8 @@ define([
   './util/url'
 ], function(Backbone, config, URL){
 
+  'use strict';
+
   // Create the history object if it's not created, as Backbone does
   Backbone.history || (Backbone.history = new Backbone.History);
 

@@ -14,6 +14,8 @@ define([
   '../../util/url'
 ], function(config, _, _s, I18n, url){
 
+  'use strict';
+
   /**
    * Joins the specified url fragments, starting from the end, util the current
    * fragment contains the host part
