@@ -16,7 +16,7 @@ define([
 
   'use strict';
 
-  var rLocale = /^([a-zA-Z]{2})([-_]([a-zA-Z]{2}))?$/,
+  var rLocale = /^([a-zA-Z]{2})([\-_]([a-zA-Z]{2}))?$/,
       rStrictLocale = /^([a-z]{2})([_]([A-Z]{2}))?$/;
 
   /**
@@ -176,7 +176,7 @@ define([
         if (region && (!this._availableLocales || _(this._availableLocales).include(locale)))
           localeFiles.push('json!' + this._getLocaleUrl(locale));
 
-        if (localeFiles.length == 0){
+        if (localeFiles.length === 0){
           callback && callback('There are no translation files for the locale ' + locale);
           return false;
         }

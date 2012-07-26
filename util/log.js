@@ -12,7 +12,7 @@ define([
   'use strict';
 
   // The "window" object
-  var root = this;
+  var root = window || this;
 
   // If console is undefined, define one with all functions as noop (IE hack)
   if (!root.console){
@@ -64,7 +64,7 @@ define([
      */
     formatDate: function(date){
       return _s.sprintf('%02d/%02d/%02d - %02d:%02d:%02d',
-        date.getDate(), date.getMonth()+1, parseInt((''+date.getFullYear()).substr(2)),
+        date.getDate(), date.getMonth()+1, parseInt((''+date.getFullYear()).substr(2), 10),
         date.getHours(), date.getMinutes(), date.getSeconds());
     },
 
@@ -135,7 +135,8 @@ define([
 
   // Save log levels in console object
   for (var level in LOG_LEVELS)
-    root.console[level] = LOG_LEVELS[level];
+    if (LOG_LEVELS.hasOwnProperty(level))
+      root.console[level] = LOG_LEVELS[level];
 
   return root.console;
 

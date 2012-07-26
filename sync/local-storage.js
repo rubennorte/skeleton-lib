@@ -7,8 +7,9 @@
 
 define([
   'underscore',
-  './util/namespace'
-], function(_, Namespace){
+  './util/namespace',
+  'backbone'
+], function(_, Namespace, Backbone){
 
   'use strict';
 
@@ -27,7 +28,7 @@ define([
     var collection = JSON.parse(localStorage[ns]);
 
     // Get the models, stored as the values of the collection
-    models = _(collection).values();
+    var models = _(collection).values();
 
     // Call the success callback with read models
     options.success && options.success(models);
@@ -75,8 +76,8 @@ define([
         // If the model was not stored in the collection,
         // call the error callback
         if (!modelData){
-          options.error
-            && options.error('Model with id ' + model.id + ' not found');
+          options.error &&
+            options.error('Model with id ' + model.id + ' not found');
           return;
         }
 
@@ -109,7 +110,7 @@ define([
       .chain()
       .keys()
       .map(function(key){
-        return parseInt(key);
+        return parseInt(key, 10);
       })
       .compact()
       .value();
@@ -135,7 +136,7 @@ define([
       }
 
       // Call the appropiate function according to the type of model
-      if (model.models) return syncCollection(method, model, options);
+      if (model instanceof Backbone.Collection) return syncCollection(method, model, options);
       else return syncModel(method, model, options);
     },
 
@@ -143,8 +144,8 @@ define([
      * Determines if the browser supports HTML5 local storage
      */
     isSupported: function(){
-      return typeof(Storage) !== "undefined"
-        && typeof(localStorage) !== 'undefined';
+      return typeof(Storage) !== "undefined" &&
+        typeof(localStorage) !== 'undefined';
     }
 
   };

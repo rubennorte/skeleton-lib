@@ -28,19 +28,21 @@ define([
     render: function(){
       this._ensureViewsObject();
 
+      var self = this;
+
       // Detach subviews
-      for (var i in this.views){
-        this.views[i].$el.detach();
-      }
+      _(this.view).each(function(view){
+        view.$el.detach();
+      });
 
       // Render template, delegate events, etc.
       // super.render();
       View.prototype.render.call(this);
 
       // Append subviews
-      for (var i in this.views){
-        this.$(i).append(this.views[i].render().el);
-      }
+      _(this.view).each(function(view, selector){
+        self.$(selector).append(view.render().el);
+      });
 
       return this;
     },
@@ -49,9 +51,9 @@ define([
       this._ensureViewsObject();
 
       // Remove sub-views
-      for (var i in this.views){
-        this.views[i].remove();
-      }
+      _(this.views).each(function(view){
+        view.remove();
+      });
 
       // super.remove();
       View.prototype.remove.call(this);

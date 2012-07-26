@@ -21,10 +21,10 @@ define([
    * fragment contains the host part
    */
   function joinUntilHost(){
-    var fragment,
-        fragments = _(arguments).toArray(),
+    var fragments = _(arguments).toArray(),
         urlStr = '';
-    while (fragment = fragments.pop()){
+    while (fragments.length > 0){
+      var fragment = fragments.pop();
       var parsed = url.parseUri(fragment);
       if (parsed.host) return url.join(fragment, urlStr);
       else urlStr = url.join(fragment, urlStr);

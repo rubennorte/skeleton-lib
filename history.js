@@ -15,7 +15,7 @@ define([
   'use strict';
 
   // Create the history object if it's not created, as Backbone does
-  Backbone.history || (Backbone.history = new Backbone.History);
+  Backbone.history || (Backbone.history = new Backbone.History());
 
   _.extend(Backbone.history, {
 
@@ -50,7 +50,7 @@ define([
       var current = Backbone.history.fragment,
           root = Backbone.history.options.root;
       // Fixes error in backbone
-      if (root && current.indexOf(root) == 0){
+      if (root && current.indexOf(root) === 0){
         current = current.substr(root.length);
       }
       return current;

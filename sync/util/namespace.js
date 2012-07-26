@@ -23,7 +23,7 @@ define([
 
       if (url){
         // Remove leading slash
-        if (url.indexOf('/') == 0)
+        if (url.indexOf('/') === 0)
           url = url.substr(1);
         
         var parts = url.split('/');
