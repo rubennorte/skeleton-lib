@@ -8,8 +8,9 @@
 define([
   'backbone',
   'config',
-  './util/url'
-], function(Backbone, config, URL){
+  './util/url',
+  'underscore'
+], function(Backbone, config, URL, _){
 
   'use strict';
 
