@@ -36,9 +36,9 @@ define([
     fetch: function(options){
       options = options ? _.clone(options) : {};
 
-      // If not reload and collection is not empty, sync is not necessary
-      if (options.reload === undefined) options.reload = true;
-      if (!options.reload && this.isLoaded()){
+      // If reload option is set to false and collection is not empty,
+      // return immediately
+      if (options.reload === false && this.isLoaded()){
         options.success && options.success(this);
         // TODO return something that implements the promise interface
         return;
