@@ -69,8 +69,8 @@ define([
         error && error();
       };
 
-      // Trigger syncing event
-      this.trigger('syncing', this, options);
+      // Trigger loading event
+      this.trigger('loading', this, options);
 
       // return super.fetch(options);
       return Backbone.Collection.prototype.fetch.call(this, options);
