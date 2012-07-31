@@ -17,6 +17,18 @@ define([
    */
   var Collection = Backbone.Collection.extend({
 
+    _loaded: false,
+    _loading: 0,
+    _data: {},
+
+    reset: function(models, options){
+      // Otherwise, it may be set to true in fetch function
+      if (models && models.length > 0)
+        this._loaded = true;
+
+      return Backbone.Collection.prototype.reset.call(this, models, options);
+    },
+
     /**
      * Backbone fetch function, redefined to provide support for reload option
      * and send the content of the _data property if the data option is not set
