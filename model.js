@@ -17,6 +17,10 @@ define([
    */
   var Model = Backbone.Model.extend({
 
+    _loading: false,
+    _loaded: 0,
+    _data: {},
+
     /**
      * Backbone fetch function, redefined to provide support for reload option
      * and loading/loaded flags and events
