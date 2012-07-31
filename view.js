@@ -23,6 +23,11 @@ define([
 
     // Instance properties
 
+    _rendered: false,
+    template: null,
+    templateVars: {},
+    templateEngine: null,
+
     /**
      * Backbone render redefined to render the specified template,
      * delegate the events and set the _rendered flag as true
