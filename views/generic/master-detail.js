@@ -33,7 +33,10 @@ define([
       //super.initialize();
       ListView.prototype.initialize.apply(this, arguments);
 
-      _.defaults(this.options, { visibilityAttr: 'visible', cacheViews: false });
+      _.defaults(this.options, {
+        visibilityAttr: 'visible',
+        cacheViews: false
+      });
 
       console.trace('MasterDetailView', 'initialize', this);
       
@@ -41,11 +44,13 @@ define([
         this.detailViews = _.chain([]);
         this.collection.on('reset', this.resetCache, this);
         this.collection.on('remove', this.removeDetailViewFromCache, this);
-        this.collection.on('change:'+this.options.visibilityAttr, this.changeVisibleCache, this);
+        this.collection.on('change:'+this.options.visibilityAttr,
+          this.changeVisibleCache, this);
         // It's not needed to bind an event when an element is added to the list
         // because it is handled when shown.
       } else {
-        this.collection.on('change:'+this.options.visibilityAttr, this.changeVisible, this);
+        this.collection.on('change:'+this.options.visibilityAttr,
+          this.changeVisible, this);
       }
       
       this.collection.on('remove', this.removeDetailView, this);

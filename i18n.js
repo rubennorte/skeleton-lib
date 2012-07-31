@@ -50,9 +50,10 @@ define([
         case 'string':
           // If text is a string, search in translation object
           if (!this._translations[text] && !this._missingTranslations[text]){
-            // The translation is not found, so increment the counter for that key
-            // in the missing translations object
-            this._missingTranslations[text] = (this._missingTranslations[text] || 0) + 1;
+            // The translation is not found, so increment the counter for
+            // that key in the missing translations object
+            this._missingTranslations[text] =
+              (this._missingTranslations[text] || 0) + 1;
             this._translations[text] = text;
             console.info('I18n', 't', 'Missing translation for key', text);
           }
@@ -90,7 +91,8 @@ define([
     },
 
     /**
-     * Returns the default locale according to the information provided by the navigator
+     * Returns the default locale according to the information provided
+     * by the navigator
      */
     getDefaultLocale: function(){
       var locale;
@@ -98,7 +100,8 @@ define([
       if (!navigator) return;
 
       // Android fix
-      if (navigator.userAgent && (locale = navigator.userAgent.match(/android.*\W(\w\w)-(\w\w)\W/i)))
+      if (navigator.userAgent &&
+        (locale = navigator.userAgent.match(/android.*\W(\w\w)-(\w\w)\W/i)))
         return locale;
 
       return navigator.language;
@@ -131,7 +134,8 @@ define([
     isLocaleAvailable: function(locale){
       if (!this._availableLocales) return undefined;
 
-      var languageAvailable = _(this.availableLocales).include(locale.substr(0,2));
+      var language = locale.substr(0,2),
+          languageAvailable = _(this.availableLocales).include(language);
 
       if (languageAvailable) return true;
 
@@ -170,20 +174,24 @@ define([
             region = locale.substr(3,2),
             localeFiles = [];
 
-        if (!this._availableLocales || _(this._availableLocales).include(language))
+        if (!this._availableLocales ||
+          _(this._availableLocales).include(language))
           localeFiles.push('json!' + this._getLocaleUrl(language));
 
-        if (region && (!this._availableLocales || _(this._availableLocales).include(locale)))
+        if (region &&
+          (!this._availableLocales || (this._availableLocales).include(locale)))
           localeFiles.push('json!' + this._getLocaleUrl(locale));
 
         if (localeFiles.length === 0){
-          callback && callback('There are no translation files for the locale ' + locale);
+          callback &&
+            callback('There are no translation files for the locale ' + locale);
           return false;
         }
 
         var self = this;
         require(localeFiles, function(languageTranslations, regionTranslations){
-          var newTranslations = _.extend({}, languageTranslations, regionTranslations);
+          var newTranslations = _.extend({}, languageTranslations,
+            regionTranslations);
           self._setLocaleAndTranslations(locale, newTranslations, callback);
         });
       }
@@ -195,7 +203,8 @@ define([
     setAvailableLocales: function(availableLocales){
       _(availableLocales).each(function(availableLocale){
         if (!rStrictLocale.test(availableLocale))
-          throw new Error('All the locale filenames must have a valid POSIX format (en | en_US)');
+          throw new Error('All the locale filenames must have a valid POSIX' +
+            ' format (en | en_US)');
       });
       this._availableLocales = availableLocales;
     },
@@ -208,7 +217,8 @@ define([
 
     // Assigns the locale, the translations object and invokes the callback
     _setLocaleAndTranslations: function(locale, translations, callback){
-      if (this._locale != locale || !_.isEqual(this._translations, translations)){
+      if (this._locale != locale ||
+        !_.isEqual(this._translations, translations)){
         console.info('I18n', 'setLocale', 'Locale set to', locale);
         this._locale = locale;
         this._translations = translations;
@@ -227,7 +237,8 @@ define([
     if (locale.length == 2)
       return locale.toLowerCase();
     
-    return locale.substr(0,2).toLowerCase() + '_' + locale.substr(3,2).toUpperCase();
+    return locale.substr(0,2).toLowerCase() + '_' +
+      locale.substr(3,2).toUpperCase();
   }
 
   // Bind all the public functions

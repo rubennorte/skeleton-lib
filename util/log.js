@@ -64,7 +64,8 @@ define([
      */
     formatDate: function(date){
       return _s.sprintf('%02d/%02d/%02d - %02d:%02d:%02d',
-        date.getDate(), date.getMonth()+1, parseInt((''+date.getFullYear()).substr(2), 10),
+        date.getDate(), date.getMonth()+1,
+        parseInt((''+date.getFullYear()).substr(2), 10),
         date.getHours(), date.getMinutes(), date.getSeconds());
     },
 

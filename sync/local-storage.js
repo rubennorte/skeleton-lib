@@ -131,13 +131,16 @@ define([
       options || (options = {});
 
       if (!LocalStorageSync.isSupported()){
-        options.error && options.error('The browser does not support local storage');
+        options.error && options.error('The browser does not support local' +
+          ' storage');
         return false;
       }
 
       // Call the appropiate function according to the type of model
-      if (model instanceof Backbone.Collection) return syncCollection(method, model, options);
-      else return syncModel(method, model, options);
+      if (model instanceof Backbone.Collection)
+        return syncCollection(method, model, options);
+      else
+        return syncModel(method, model, options);
     },
 
     /**

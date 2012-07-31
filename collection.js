@@ -49,7 +49,7 @@ define([
         options.data = this._data;
       }
 
-      // Increment loading count (o set as 1)
+      // Increment loading count (o set to 1)
       if (!this._loading)
         this._loading = 1;
       else

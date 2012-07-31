@@ -38,7 +38,8 @@ define(function(){
       var PARSER = /^(?:([^:\/?#]+):)?(?:\/\/((?:(([^:@]*)(?::([^:@]*))?)?@)?([^:\/?#]*)(?::(\d*))?))?((((?:[^?#\/]*\/)*)([^?#]*))(?:\?([^#]*))?(?:#(.*))?)/;
       var m   = PARSER.exec(str),
           key = ["source","protocol","authority","userInfo","user","password",
-                 "host","port","relative","path","directory","file","query","anchor"],
+                 "host","port","relative","path","directory","file","query",
+                 "anchor"],
           uri = {},
           i   = 14;
       while (i--) uri[key[i]] = m[i] || "";
