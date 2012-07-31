@@ -17,6 +17,8 @@ define([
    */
   var ListView = View.extend({
 
+    _itemViews: [],
+
     /**
      * Initializes the list view
      * The available options are:
@@ -40,7 +42,7 @@ define([
       console.trace('ListView', 'render', this);
 
       // Detach item view elements to keep event bindings
-      this.itemViews.pluck('$el').invoke('detach');
+      _(this._itemViews).chain().pluck('$el').invoke('detach');
 
       // Empty this view
       this.$el.empty();
@@ -58,7 +60,7 @@ define([
 
     onReset: function(collection){
       // Remove all old item views
-      this.itemViews.invoke('remove');
+      _(this._itemViews).invoke('remove');
       // Create the new item views
       this.createItemViews();
 
@@ -91,9 +93,9 @@ define([
      */
     createItemViews: function(){
       var self = this;
-      this.itemViews = _.chain(this.collection.map(function(model){
+      this._itemViews = this.collection.map(function(model){
         return self.createItemView(model);
-      }));
+      });
     },
 
     /**
@@ -102,7 +104,7 @@ define([
      */
     populateList: function(){
       var list = this.getListElement();
-      this.itemViews.each(function(itemView){
+      _(this._itemViews).each(function(itemView){
         list.append(itemView.render().$el);
       });
     },
@@ -114,11 +116,11 @@ define([
     onAdd: function(model, collection, options){
       var index = options.index;
       var itemView = this.createItemView(model);
-      this.itemViews.value().splice(index, 0, itemView);
+      this.itemViews.splice(index, 0, itemView);
       if (this._rendered){
         itemView.render();
         if (index > 0){
-          this.itemViews.value()[index-1].$el.after(itemView.$el);
+          this.itemViews[index-1].$el.after(itemView.$el);
         } else {
           this.getListElement().append(itemView.$el);
         }
@@ -131,7 +133,7 @@ define([
      */
     onRemove: function(model, collection, options){
       var index = options.index;
-      var view = this.itemViews.value().splice(index, 1)[0];
+      var view = this.itemViews.splice(index, 1)[0];
       view.remove();
     },
 
