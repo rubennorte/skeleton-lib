@@ -14,9 +14,9 @@ define([
   
   var CompositeView = View.extend({
 
-    setView: function(selector, view){
-      this._ensureViewsObject();
+    views: {},
 
+    setView: function(selector, view){
       // Remove current subview if exists
       if (this.views[selector])
         this.views[selector].remove();
@@ -26,8 +26,6 @@ define([
     },
 
     render: function(){
-      this._ensureViewsObject();
-
       var self = this;
 
       // Detach subviews
@@ -48,8 +46,6 @@ define([
     },
 
     remove: function(){
-      this._ensureViewsObject();
-
       // Remove sub-views
       _(this.views).each(function(view){
         view.remove();
@@ -57,10 +53,6 @@ define([
 
       // super.remove();
       View.prototype.remove.call(this);
-    },
-
-    _ensureViewsObject: function(){
-      this.views || (this.views = {});
     }
     
   });
