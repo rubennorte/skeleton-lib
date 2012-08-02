@@ -25,9 +25,9 @@ define([
     start: function(options){
       // Set default options
       options || (options = {});
-      if (typeof(options.root) == 'undefined')
+      if (typeof(options.root) === 'undefined')
         options.root = URL.parseUri(config.url.root).path;
-      if (typeof(options.pushState) == 'undefined')
+      if (typeof(options.pushState) === 'undefined')
         options.pushState = true;
 
       Backbone.History.prototype.start.call(this, options);

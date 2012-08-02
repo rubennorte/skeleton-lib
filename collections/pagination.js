@@ -31,7 +31,7 @@ define([
       }
 
       // Property getter
-      if (typeof(name) == 'string' && typeof(value) == 'undefined'){
+      if (typeof(name) === 'string' && typeof(value) === 'undefined'){
         // Computed property
         if (name == 'totalPages'){
           return getTotalPages(this.size(), opts.perPage);
@@ -41,7 +41,7 @@ define([
       }
 
       // Property setter
-      if (typeof(name) != 'undefined'){
+      if (typeof(name) !== 'undefined'){
 
         var set = {};
         if (_.isObject(name)){
