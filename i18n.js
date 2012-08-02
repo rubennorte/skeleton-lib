@@ -183,7 +183,7 @@ define([
           localeFiles.push('json!' + this._getLocaleUrl(locale));
 
         if (localeFiles.length === 0){
-          callback &&
+          if (callback)
             callback('There are no translation files for the locale ' + locale);
           return false;
         }
@@ -225,7 +225,7 @@ define([
         this._missingTranslations = {};
         this.trigger('change:locale', this);
       }
-      callback && callback(null, locale);
+      if (callback) callback(null, locale);
     }
 
   });

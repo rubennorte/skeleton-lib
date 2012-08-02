@@ -55,11 +55,11 @@ define([
      * and template engine (or the default engine)
      */
     renderTemplate: function(template, locals, templateEngine){
-      template || (template = this.template);
+      template = template || this.template;
       
       if (template){
-        locals || (locals = this.templateVars);
-        templateEngine || (templateEngine = this.templateEngine);
+        locals = locals || this.templateVars;
+        templateEngine = templateEngine || this.templateEngine;
 
         var content = View.renderTemplate(template, locals, templateEngine);
         this.$el.html(content);
@@ -116,7 +116,7 @@ define([
     compileTemplate: function(template, templateEngine){
 
       // If templateEngine is not defined, use default one
-      templateEngine || (templateEngine = this.defaultTemplateEngine);
+      templateEngine = templateEngine || this.defaultTemplateEngine;
 
       return templateEngine.compile(template);
     },
@@ -128,7 +128,7 @@ define([
     renderTemplate: function(template, locals, templateEngine){
 
       // If templateEngine is not defined, use default
-      templateEngine || (templateEngine = this.defaultTemplateEngine);
+      templateEngine = templateEngine || this.defaultTemplateEngine;
 
       // Merge local and global variables to construct the template context
       var context = _.defaults({}, locals, this.globals);

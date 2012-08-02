@@ -15,7 +15,7 @@ define([
   'use strict';
 
   // Create the history object if it's not created, as Backbone does
-  Backbone.history || (Backbone.history = new Backbone.History());
+  Backbone.history = Backbone.history || new Backbone.History();
 
   _.extend(Backbone.history, {
 
@@ -24,7 +24,7 @@ define([
      */
     start: function(options){
       // Set default options
-      options || (options = {});
+      options = options || {};
       if (typeof(options.root) === 'undefined')
         options.root = URL.parseUri(config.url.root).path;
       if (typeof(options.pushState) === 'undefined')

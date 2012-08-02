@@ -38,7 +38,7 @@ define([
       'returned to collection', model);
 
     // Call the success callback with read models
-    options.success && options.success(models);
+    if (options.success) options.success(models);
 
     // TODO return something that implements the promise interface
     return {};
@@ -67,11 +67,11 @@ define([
       if (modelData){
         console.info('skeleton/sync/local-storage', 'Data', modelData,
           'returned to model', model);
-        options.success && options.success(modelData);
+        if (options.success) options.success(modelData);
       } else {
         console.error('skeleton/sync/local-storage', 'Model', model,
           'data not found in localStorage object');
-        options.error && options.error('Not found');
+        if (options.error) options.error('Not found');
       }
 
     } else {
@@ -95,7 +95,7 @@ define([
         if (!modelData){
           console.error('skeleton/sync/local-storage', 'Model', model,
             'data not found in localStorage object');
-          options.error && options.error('Not found');
+          if (options.error) options.error('Not found');
           return;
         }
 
@@ -117,7 +117,7 @@ define([
           'data deleted from localStorage object');
       
       // Call the success callback
-      options.success && options.success(modelData);
+      if (options.success) options.success(modelData);
     }
 
     // TODO return something that implements the promise interface
@@ -150,12 +150,12 @@ define([
      * Backbone sync implementation using localStorage
      */
     sync: function(method, model, options){
-      options || (options = {});
+      options = options || {};
 
       if (!LocalStorageSync.isSupported()){
         var errorMsg = 'The browser does not support local storage';
         console.error('skeleton/sync/local-storage', errorMsg);
-        options.error && options.error(errorMsg);
+        if (options.error) options.error(errorMsg);
         return false;
       }
 

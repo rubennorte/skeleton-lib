@@ -38,7 +38,7 @@ define([
      * Backbone sync implementation using socket.io communication
      */
     sync: function(method, model, options){
-      options || (options = {});
+      options = options || {};
 
       // Get the namespace of the model (or collection)
       var ns = Namespace.get(model);
@@ -60,12 +60,12 @@ define([
         if (error){
           console.error('skeleton/sync/socket.io',
             'Error response received from server', error);
-          options.error && options.error(error);
+          if (options.error) options.error(error);
         } else {
           console.info('skeleton/sync/socket.io',
             'Synchronization done successfully. Received', response,
             'from server');
-          options.success && options.success(response);
+          if (options.success) options.success(response);
         }
       });
 

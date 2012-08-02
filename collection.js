@@ -39,7 +39,7 @@ define([
       // If reload option is set to false and collection is not empty,
       // return immediately
       if (options.reload === false && this.isLoaded()){
-        options.success && options.success(this);
+        if (options.success) options.success(this);
         // TODO return something that implements the promise interface
         return;
       }
@@ -62,11 +62,11 @@ define([
       options.success = function(){
         self._loading--;
         self._loaded = true;
-        success && success();
+        if (success) success();
       };
       options.error = function(){
         self._loading--;
-        error && error();
+        if (error) error();
       };
 
       // Trigger loading event
