@@ -23,6 +23,9 @@ define(function(){
   config.i18n.loadPath = 'data/locales/';
   config.i18n.defaultLocale = 'en';
 
+  config.log = {};
+  config.log.level = 4; // ERROR
+
   return config;
 
 });
