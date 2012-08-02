@@ -22,13 +22,20 @@ define([
 
     // If the collection is not already stored in localStorage, return an
     // empty collection
-    if (!localStorage[ns]) localStorage[ns] = '{}';
+    if (!localStorage[ns]){
+      console.debug('skeleton/sync/local-storage', 'Uninitialized namespace',
+        ns, 'for collection', model, '. Initializing...');
+      localStorage[ns] = '{}';
+    }
 
     // Parse the collection JSON data from localStorage
     var collection = JSON.parse(localStorage[ns]);
 
     // Get the models, stored as the values of the collection
     var models = _(collection).values();
+
+    console.info('skeleton/sync/local-storage', 'Data', models,
+      'returned to collection', model);
 
     // Call the success callback with read models
     options.success && options.success(models);
@@ -42,7 +49,11 @@ define([
     var ns = Namespace.get(model, options);
 
     // Read the collection associated with the namespace
-    if (!localStorage[ns]) localStorage[ns] = '{}';
+    if (!localStorage[ns]){
+      console.debug('skeleton/sync/local-storage', 'Uninitialized namespace',
+        ns, 'for model', model, '. Initializing...');
+      localStorage[ns] = '{}';
+    }
 
     // Parse the collection JSON data from localStorage
     var collection = JSON.parse(localStorage[ns]);
@@ -53,8 +64,15 @@ define([
 
       // Retrieve the model data from the collection
       modelData = collection[model.id];
-      if (modelData) options.success && options.success(modelData);
-      else options.error && options.error('Not found');
+      if (modelData){
+        console.info('skeleton/sync/local-storage', 'Data', modelData,
+          'returned to model', model);
+        options.success && options.success(modelData);
+      } else {
+        console.error('skeleton/sync/local-storage', 'Model', model,
+          'data not found in localStorage object');
+        options.error && options.error('Not found');
+      }
 
     } else {
       // Modifying method
@@ -70,20 +88,19 @@ define([
         modelData.id = generateId(collection);
         // Store the model in the collection
         collection[modelData.id] = modelData;
-
       } else if (method == 'update'){
 
         // If the model was not stored in the collection,
         // call the error callback
         if (!modelData){
-          options.error &&
-            options.error('Model with id ' + model.id + ' not found');
+          console.error('skeleton/sync/local-storage', 'Model', model,
+            'data not found in localStorage object');
+          options.error && options.error('Not found');
           return;
         }
 
         // Update the model in the collection
         collection[model.id] = modelData;
-
       } else if (method == 'delete'){
         // Delete the model from the collection
         delete collection[model.id];
@@ -91,6 +108,13 @@ define([
 
       // Store modified collection in localStorage
       localStorage[ns] = JSON.stringify(collection);
+       
+      if (method == 'create' || method == 'update')
+        console.info('skeleton/sync/local-storage', 'Model', model,
+          'data stored successfully in localStorage', modelData);
+      else
+        console.info('skeleton/sync/local-storage', 'Model', model,
+          'data deleted from localStorage object');
       
       // Call the success callback
       options.success && options.success(modelData);
@@ -126,13 +150,12 @@ define([
      * Backbone sync implementation using localStorage
      */
     sync: function(method, model, options){
-      console.debug('LocalStorageSync', 'sync', this, arguments);
-
       options || (options = {});
 
       if (!LocalStorageSync.isSupported()){
-        options.error && options.error('The browser does not support local' +
-          ' storage');
+        var errorMsg = 'The browser does not support local storage';
+        console.error('skeleton/sync/local-storage', errorMsg);
+        options.error && options.error(errorMsg);
         return false;
       }
 

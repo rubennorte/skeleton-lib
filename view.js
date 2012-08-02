@@ -58,7 +58,6 @@ define([
       template || (template = this.template);
       
       if (template){
-
         locals || (locals = this.templateVars);
         templateEngine || (templateEngine = this.templateEngine);
 

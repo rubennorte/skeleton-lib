@@ -21,11 +21,16 @@ define([
    */
   var SocketIOSync = {
 
+    // Callback functions
+    _serverCreate: null,
+    _serverDelete: null,
+    _serverChange: null,
+
     /**
      * Assigns the socket that must be used to sync
      */
     setSocket: function(sock){
-      console.info('SocketIOSync', 'setSocket', this, sock);
+      console.info('skeleton/sync/socket.io', 'Socket set to', sock);
       socket = sock;
     },
 
@@ -33,8 +38,6 @@ define([
      * Backbone sync implementation using socket.io communication
      */
     sync: function(method, model, options){
-      console.debug('SocketIOSync', 'sync', this, arguments);
-
       options || (options = {});
 
       // Get the namespace of the model (or collection)
@@ -47,11 +50,21 @@ define([
         data = model.toJSON();
       }
 
+      var eventName = ns + ':' + method;
+
+      console.debug('skeleton/sync/socket.io', 'Emitting event',
+        eventName, 'with params', data);
+
       // Emit the sync event with data as argument
-      socket.emit(ns + ':' + method, data, function(error, response){
+      socket.emit(eventName, data, function(error, response){
         if (error){
+          console.error('skeleton/sync/socket.io',
+            'Error response received from server', error);
           options.error && options.error(error);
         } else {
+          console.info('skeleton/sync/socket.io',
+            'Synchronization done successfully. Received', response,
+            'from server');
           options.success && options.success(response);
         }
       });
@@ -61,8 +74,6 @@ define([
     },
 
     startSync: function(model){
-      console.trace('SocketIOSync', 'startSync', this, model);
-      
       // If model is not defined assume that it has been extended
       // with this module
       if (!model) model = this;
@@ -70,14 +81,16 @@ define([
       // If models property is defined, assume that it's a collection
       if (model instanceof Backbone.Collection){
         startCollectionSync(model);
+        console.debug('skeleton/sync/socket.io',
+          'Active sync started for collection', model);
       } else {
         startModelSync(model);
+        console.debug('skeleton/sync/socket.io',
+          'Active sync started for model', model);
       }
     },
 
     stopSync: function(model){
-      console.trace('SocketIOSync', 'stopSync', this, model);
-
       // If model is not defined assume that it has been extended
       // with this module
       if (!model) model = this;
@@ -87,17 +100,23 @@ define([
       // If models property is defined, assume that it's a collection
       if (model instanceof Backbone.Collection){
         socket.removeListener(ns + ':create', model._serverCreate);
+        console.debug('skeleton/sync/socket.io',
+          'Active sync stopped for collection', model);
       } else {
         socket.removeListener(ns + ':update', model._serverChange);
         socket.removeListener(ns + ':delete', model._serverDelete);
+        console.debug('skeleton/sync/socket.io',
+          'Active sync stopped for model', model);
       }
     }
-
   };
 
   function startCollectionSync(collection){
     // Store a reference to the callback function
     collection._serverCreate = function(data){
+      console.debug('skeleton/sync/socket.io', 'Data', data,
+        'received from server to create in collection', collection);
+
       if (!data) return;
 
       // If the returned value is a single model data, insert into an array
@@ -109,25 +128,32 @@ define([
         var exists = collection.get(modelData.id);
         // Add or update the collection with the server data
         if (!exists) {
-          collection.add(modelData, {silent: true});
+          exists = collection.add(modelData, {silent: true});
+          console.info('skeleton/sync/socket.io', 'Model', exists,
+            'added to collection', collection);
         } else {
           exists.set(modelData, {silent: true});
+          console.info('skeleton/sync/socket.io', 'Model', exists,
+            'updated in collection', collection);
         }
       }
 
       // Trigger the reset event
-      collection.reset(collection.models);
+      collection.trigger('reset', collection);
     };
 
     // Bind the server create callback
     var ns = Namespace.get(collection);
-    socket.on(ns + ':create', collection._serverCreate);
+    var eventName = ns + ':create';
+    socket.on(eventName, collection._serverCreate);
   }
 
   function startModelSync(model){
     // On change, simply update the model attributes
     model._serverChange = function(data){
       model.set(data);
+      console.info('skeleton/sync/socket.io', 'Model', model,
+        'updated with data', data, 'received from server');
     };
 
     // On delete, remove the collection or trigger the remove event
@@ -139,6 +165,8 @@ define([
       } else {
         model.trigger('remove', model);
       }
+      console.info('skeleton/sync/socket.io', 'Model', model,
+        'deleted from server');
     };
 
     var ns;
@@ -149,6 +177,9 @@ define([
           deleteEvent = ns + ':delete';
       socket.on(updateEvent, model._serverChange);
       socket.on(deleteEvent, model._serverDelete);
+      console.debug('skeleton/sync/socket.io',
+        'Removed callbacks for events', updateEvent, 'and', deleteEvent,
+        'in model', model);
     }
 
     function unbindEvents(){
@@ -156,6 +187,9 @@ define([
           deleteEvent = ns + ':delete';
       socket.removeListener(updateEvent, model._serverChange);
       socket.removeListener(deleteEvent, model._serverDelete);
+      console.debug('skeleton/sync/socket.io',
+        'Added callbacks for events', updateEvent, 'and', deleteEvent,
+        'in model', model);
     }
 
     // If model id changes then does the namespace and we

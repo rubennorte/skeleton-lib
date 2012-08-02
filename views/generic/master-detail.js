@@ -37,8 +37,6 @@ define([
         visibilityAttr: 'visible',
         cacheViews: false
       });
-
-      console.trace('MasterDetailView', 'initialize', this);
       
       if (this.options.cacheViews){
         this.detailViews = _.chain([]);
@@ -60,8 +58,6 @@ define([
       // Render template and list items
       //super.render();
       ListView.prototype.render.apply(this, arguments);
-
-      console.trace('MasterDetailView', 'render', this);
 
       this.showCurrent();
 

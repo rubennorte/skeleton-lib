@@ -55,7 +55,7 @@ define([
             this._missingTranslations[text] =
               (this._missingTranslations[text] || 0) + 1;
             this._translations[text] = text;
-            console.info('I18n', 't', 'Missing translation for key', text);
+            console.info('skeleton/i18n', 'Missing translation for key', text);
           }
 
           // Set the translated text as the value in the translations object or
@@ -219,7 +219,7 @@ define([
     _setLocaleAndTranslations: function(locale, translations, callback){
       if (this._locale != locale ||
         !_.isEqual(this._translations, translations)){
-        console.info('I18n', 'setLocale', 'Locale set to', locale);
+        console.info('skeleton/i18n', 'Locale set to', locale);
         this._locale = locale;
         this._translations = translations;
         this._missingTranslations = {};

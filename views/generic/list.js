@@ -28,8 +28,6 @@ define([
      *                          be the items appended to (default: root element)
      */
     initialize: function(){
-      console.trace('ListView', 'initialize', this);
-
       // Create all the views for the list items
       this.createItemViews();
       // Bind events
@@ -39,8 +37,6 @@ define([
     },
 
     render: function(){
-      console.trace('ListView', 'render', this);
-
       // Detach item view elements to keep event bindings
       _(this._itemViews).chain().pluck('$el').invoke('detach');
 
