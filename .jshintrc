@@ -1,0 +1,33 @@
+{
+    "bitwise"       : true,     // Prohibit bitwise operators (&, |, ^, etc.).
+    "curly"         : false,    // Require {} for every new block or scope.
+    "eqeqeq"        : true,    // Require triple equals i.e. `===`.
+    "forin"         : true,     // Tolerate `for in` loops without `hasOwnPrototype`.
+    "immed"         : true,     // Require immediate invocations to be wrapped in parens e.g. `( function(){}() );`
+    "latedef"       : true,     // Prohibit variable use before definition.
+    "newcap"        : true,     // Require capitalization of all constructor functions e.g. `new F()`.
+    "noarg"         : true,     // Prohibit use of `arguments.caller` and `arguments.callee`.
+    "noempty"       : true,     // Prohibit use of empty blocks.
+    "nonew"         : true,     // Prohibit use of constructors for side-effects.
+    "plusplus"      : false,    // Prohibit use of `++` & `--`.
+    "regexp"        : false,    // Prohibit `.` and `[^...]` in regular expressions.
+    "undef"         : true,     // Require all non-global variables be declared before they are used.
+    "strict"        : true,     // Require `use strict` pragma in every file.
+    "trailing"      : true,     // Prohibit trailing whitespaces.
+    
+    "browser"       : true,     // Standard browser globals e.g. `window`, `document`.
+    "devel"         : true,     // Allow development statements e.g. `console.log();`.
+    "jquery"        : false,    // Enable globals exposed by jQuery JavaScript library.
+    "node"          : false,    // Enable globals available when code is running inside of the NodeJS runtime environment.
+    "nonstandard"   : false,    // Define non-standard but widely adopted globals such as escape and unescape.
+
+    //"maxerr"        : 100,    // Maximum errors before stopping.
+    "predef"        : [         // Extra globals.
+        // RequireJS
+        "define",
+        // HTML5
+        "Storage",
+        "localStorage"
+    ],
+    "indent"        : 2         // Specify indentation spacing
+}
