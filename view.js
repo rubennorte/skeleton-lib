@@ -90,7 +90,7 @@ define([
       // super._configure();
       Backbone.View.prototype._configure.apply(this, arguments);
 
-      if (this.options.template && !this.template){
+      if (this.options.template){
         this.template = this.options.template;
       }
     }
