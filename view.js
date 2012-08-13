@@ -26,7 +26,7 @@ define([
 
     _rendered: false,
     template: null,
-    templateVars: {},
+    templateVars: null,
     templateEngine: null,
 
     /**
