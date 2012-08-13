@@ -59,7 +59,7 @@ define([
     var collection = JSON.parse(localStorage[ns]);
     var modelData;
 
-    if (method == 'read'){
+    if (method === 'read'){
       // Readonly method
 
       // Retrieve the model data from the collection
@@ -83,12 +83,12 @@ define([
       // Update the model data from its JSON representation
       modelData = model.toJSON();
 
-      if (method == 'create'){
+      if (method === 'create'){
         // Assign a new id to the model
         modelData.id = generateId(collection);
         // Store the model in the collection
         collection[modelData.id] = modelData;
-      } else if (method == 'update'){
+      } else if (method === 'update'){
 
         // If the model was not stored in the collection,
         // call the error callback
@@ -101,7 +101,7 @@ define([
 
         // Update the model in the collection
         collection[model.id] = modelData;
-      } else if (method == 'delete'){
+      } else if (method === 'delete'){
         // Delete the model from the collection
         delete collection[model.id];
       }
@@ -109,7 +109,7 @@ define([
       // Store modified collection in localStorage
       localStorage[ns] = JSON.stringify(collection);
        
-      if (method == 'create' || method == 'update')
+      if (method === 'create' || method === 'update')
         console.info('skeleton/sync/local-storage', 'Model', model,
           'data stored successfully in localStorage', modelData);
       else

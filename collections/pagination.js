@@ -33,7 +33,7 @@ define([
       // Property getter
       if (typeof(name) === 'string' && typeof(value) === 'undefined'){
         // Computed property
-        if (name == 'totalPages'){
+        if (name === 'totalPages'){
           return getTotalPages(this.size(), opts.perPage);
         }
         // Stored property

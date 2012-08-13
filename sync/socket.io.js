@@ -46,7 +46,7 @@ define([
       // Send a JSON representation of the model if the data option
       // is not defined and is a create or update method
       var data = options.data;
-      if (!data && model && (method == 'create' || method == 'update')) {
+      if (!data && model && (method === 'create' || method === 'update')) {
         data = model.toJSON();
       }
 

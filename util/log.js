@@ -12,7 +12,7 @@ define([
   'use strict';
 
   // The "window" object
-  var root = window || this;
+  var root = typeof(window) !== 'undefined' ? window : this;
 
   // If console is undefined, define one with all functions as noop (IE hack)
   if (!root.console){
@@ -114,7 +114,7 @@ define([
       if (logLevel <= level){
         var method = METHOD_MAPPING[level];
 
-        if (typeof(args[0]) == 'string'){
+        if (typeof(args[0]) === 'string'){
           args[0] = _s.sprintf('%s | %s | %s',
           this.formatDate(new Date()),
           LOG_TAGS[level],
@@ -123,7 +123,7 @@ define([
 
         // Look for the closest available log method
         for (var i=level; i<METHOD_MAPPING.length; i++){
-          if (typeof(console[method]) == 'function'){
+          if (typeof(console[method]) === 'function'){
             return console[method].apply(console, args);
           }
         }

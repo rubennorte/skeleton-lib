@@ -86,7 +86,7 @@ define([
         }
         // Create or restore and render the new visible one
         this.detailView = this.detailViews.find(function(detailView){
-          return detailView.model == model;
+          return detailView.model === model;
         }).value();
         if (!this.detailView){
           this.detailView = new this.options.DetailView({model: model});
@@ -104,7 +104,7 @@ define([
     removeDetailViewFromCache: function(model){
       var detailViews = this.detailViews.value();
       for (var i=0; i<detailViews.length; i++){
-        if (detailViews[i].model == model){
+        if (detailViews[i].model === model){
           detailViews[i].remove();
           detailViews.splice(i, 1);
           return;
@@ -113,7 +113,7 @@ define([
     },
 
     removeDetailView: function(model){
-      if (this.detailView && this.detailView.model == model){
+      if (this.detailView && this.detailView.model === model){
         this.detailView.remove();
         this.detailView = null;
       }

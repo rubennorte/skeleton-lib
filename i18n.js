@@ -139,7 +139,7 @@ define([
 
       if (languageAvailable) return true;
 
-      return locale.length == 5 && _(this.availableLocales).include(locale);
+      return locale.length === 5 && _(this.availableLocales).include(locale);
     },
 
     /**
@@ -154,13 +154,13 @@ define([
       locale = toPOSIXLocale(locale);
 
       // Check if translations object is defined
-      if (typeof(translations) == 'function'){
+      if (typeof(translations) === 'function'){
         callback = translations;
         translations = null;
       }
 
       // If the locale is the current one, return immediatelly
-      if (locale == this.getLocale())
+      if (locale === this.getLocale())
         return callback && callback();
 
       if (translations){
@@ -217,7 +217,7 @@ define([
 
     // Assigns the locale, the translations object and invokes the callback
     _setLocaleAndTranslations: function(locale, translations, callback){
-      if (this._locale != locale ||
+      if (this._locale !== locale ||
         !_.isEqual(this._translations, translations)){
         console.info('skeleton/i18n', 'Locale set to', locale);
         this._locale = locale;
@@ -234,7 +234,7 @@ define([
     if (!locale)
       return locale;
 
-    if (locale.length == 2)
+    if (locale.length === 2)
       return locale.toLowerCase();
     
     return locale.substr(0,2).toLowerCase() + '_' +
