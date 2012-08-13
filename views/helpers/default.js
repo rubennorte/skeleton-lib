@@ -34,6 +34,7 @@ define([
 
   return {
 
+    // Config object
     config: config,
 
     // Underscore reference (it's passed to the underscore templates by the
@@ -41,7 +42,8 @@ define([
     // template engine)
     _: _,
 
-    // I18n functions
+    // I18n and its main functions
+    I18n: I18n,
     t: I18n.t,
     l: I18n.l,
 
