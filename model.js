@@ -7,8 +7,10 @@
 
 define([
   'backbone',
-  'underscore'
-], function(Backbone, _){
+  'underscore',
+  './util/url',
+  'config'
+], function(Backbone, _, url, config){
   
   'use strict';
   
@@ -102,6 +104,15 @@ define([
       }
 
       return json;
+    }
+
+  }, {
+
+    /**
+     * Returns the backend url for the specified path
+     */
+    backendUrl: function(path){
+      return url.join(config.url.backend, path);
     }
 
   });

@@ -17,6 +17,8 @@ define(function(){
   config.url.assets = '/';
   config.url.images = 'images';
   config.url.stylesheets = 'stylesheets';
+
+  config.url.backend = '/';
   
   // I18n related config
   config.i18n = {};

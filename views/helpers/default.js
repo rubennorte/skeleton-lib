@@ -48,6 +48,13 @@ define([
     l: I18n.l,
 
     /**
+     * Returns the backend url for the specified path
+     */
+    backendUrl: function(path){
+      return url.join(config.url.backend, path);
+    },
+
+    /**
      * Returns the url of the specified path relative to the app root url
      */
     urlTo: function(dst){
