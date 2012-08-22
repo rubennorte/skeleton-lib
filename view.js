@@ -34,10 +34,26 @@ define([
      * delegate the events and set the _rendered flag as true
      */
     render: function(){
+      this.preRender();
       this.renderTemplate();
       this.delegateEvents();
-      this._rendered = true;
+      this.postRender();
       return this;
+    },
+
+    /**
+     * Triggers the "render:before" event
+     */
+    preRender: function(){
+      this.trigger('render:before');
+    },
+
+    /**
+     * Marks the view as rendered and triggers the "render" event
+     */
+    postRender: function(){
+      this._rendered = true;
+      this.trigger('render');
     },
 
     /**
