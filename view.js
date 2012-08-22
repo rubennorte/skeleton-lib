@@ -70,17 +70,30 @@ define([
      * Removes the view from the DOM and unbinds the attached event handlers
      */
     remove: function(){
-      this.unbindEvents();
-      return Backbone.View.prototype.remove.call(this);
+      this.dispose();
+      this.$el.remove();
+      return this;
     },
 
     /**
-     * Unbinds all events bound with the context of this view
+     * Unbinds all events bound by this view
      */
-    unbindEvents: function(){
+    dispose: function(){
+      this.undelegateEvents();
+
+      // Unbinds the events bound by this view to its model and/or its collection
       if (this.model) this.model.off(null, null, this);
       if (this.collection) this.collection.off(null, null, this);
+
+      // Unbinds other bound events
+      this.unbindEvents();
     },
+
+    /**
+     * Unbinds other events bound by this view (view, model and collection
+     * events have already been detached)
+     */
+    unbindEvents: function(){},
 
     /**
      * Backbone _configure function redefined to attach the template
