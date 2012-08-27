@@ -16,6 +16,10 @@ define([
 
     views: {},
 
+    getView: function(selector){
+      return this.views[selector];
+    },
+
     setView: function(selector, view){
       // Remove current subview if exists
       if (this.views[selector])
