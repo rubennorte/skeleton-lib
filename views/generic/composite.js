@@ -29,7 +29,7 @@ define([
       var self = this;
 
       // Detach subviews
-      _(this.view).each(function(view){
+      _(this.views).each(function(view){
         view.$el.detach();
       });
 
@@ -38,7 +38,7 @@ define([
       View.prototype.render.call(this);
 
       // Append subviews
-      _(this.view).each(function(view, selector){
+      _(this.views).each(function(view, selector){
         self.$(selector).append(view.render().el);
       });
 
