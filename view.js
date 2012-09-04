@@ -35,7 +35,7 @@ define([
      */
     render: function(){
       this.preRender();
-      this.renderTemplate();
+      this.doRender();
       this.delegateEvents();
       this.postRender();
       return this;
@@ -46,6 +46,13 @@ define([
      */
     preRender: function(){
       this.trigger('render:before');
+    },
+
+    /**
+     * Renders the view
+     */
+    doRender: function(){
+      this.renderTemplate();
     },
 
     /**
@@ -97,7 +104,8 @@ define([
     dispose: function(){
       this.undelegateEvents();
 
-      // Unbinds the events bound by this view to its model and/or its collection
+      // Unbinds the events bound by this view to its model and/or its
+      // collection
       if (this.model) this.model.off(null, null, this);
       if (this.collection) this.collection.off(null, null, this);
 
