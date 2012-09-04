@@ -29,34 +29,28 @@ define([
       this.refresh();
     },
 
-    render: function(){
-      var self = this;
-
+    doRender: function(){
       // Detach subviews
       _(this.views).each(function(view){
         view.$el.detach();
       });
 
-      // Render template, delegate events, etc.
-      // super.render();
-      View.prototype.render.call(this);
+      View.prototype.doRender.call(this);
 
       // Append subviews
-      _(this.views).each(function(view, selector){
-        self.$(selector).append(view.render().el);
-      });
+      _(this.views).each(this.appendView, this);
+    },
 
-      return this;
+    appendView: function(view, selector){
+      this.$(selector).append(view.render().el);
     },
 
     remove: function(){
       // Remove sub-views
-      _(this.views).each(function(view){
-        view.remove();
-      });
+      _(this.views).invoke('remove');
 
       // super.remove();
-      View.prototype.remove.call(this);
+      return View.prototype.remove.call(this);
     }
     
   });
