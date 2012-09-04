@@ -19,14 +19,14 @@ define([
 
     _itemViews: [],
 
-    /**
-     * Initializes the list view
-     * The available options are:
-     * - collection (required)  Collection which is represented by the list
-     * - ItemView (required)    View class for the list items
-     * - listSelector           jQuery selector to determine which element will
-     *                          be the items appended to (default: root element)
-     */
+    options: {
+      // Instances of this view class will be created for each model in the list
+      ItemView: null,
+
+      // jQuery-like selector where the item views will be appended to
+      listSelector: null
+    },
+
     initialize: function(){
       // Create all the views for the list items
       this.createItemViews();
@@ -36,31 +36,25 @@ define([
       this.collection.on('remove', this.onRemove, this);
     },
 
-    render: function(){
+    doRender: function(){
       // Detach item view elements to keep event bindings
       _(this._itemViews).chain().pluck('$el').invoke('detach');
 
-      // Empty this view
-      this.$el.empty();
-
-      // Render the list container
+      // Render the list container, replacing the current view content
       this.renderContainer();
 
       // Populate the container with the list items
       this.populateList();
-
-      this._rendered = true;
-      
-      return this;
     },
 
     onReset: function(collection){
       // Remove all old item views
       _(this._itemViews).invoke('remove');
+
       // Create the new item views
       this.createItemViews();
 
-      // Populate the list again (the old items were previouslyremoved)
+      // Populate the list again (the old items were previously removed)
       if (this._rendered)
         this.populateList();
     },
@@ -141,21 +135,6 @@ define([
         return this.$(this.options.listSelector);
       }
       return this.$el;
-    },
-
-    /**
-     * Removes this view from the DOM and unbind all events
-     */
-    remove: function(){
-      this.unbindEvents();
-      
-      // super.remove();
-      View.prototype.remove.apply(this, arguments);
-    },
-
-    unbindEvents: function(){
-      // Remove all event handlers bind to this context
-      this.collection.off(null, null, this);
     }
 
   });
