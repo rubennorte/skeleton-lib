@@ -112,11 +112,11 @@ define([
     onAdd: function(model, collection, options){
       var index = options.index;
       var itemView = this.createItemView(model);
-      this.itemViews.splice(index, 0, itemView);
+      this._itemViews.splice(index, 0, itemView);
       if (this._rendered){
         itemView.render();
         if (index > 0){
-          this.itemViews[index-1].$el.after(itemView.$el);
+          this._itemViews[index-1].$el.after(itemView.$el);
         } else {
           this.getListElement().append(itemView.$el);
         }
@@ -129,7 +129,7 @@ define([
      */
     onRemove: function(model, collection, options){
       var index = options.index;
-      var view = this.itemViews.splice(index, 1)[0];
+      var view = this._itemViews.splice(index, 1)[0];
       view.remove();
     },
 
