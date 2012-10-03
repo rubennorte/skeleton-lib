@@ -83,7 +83,7 @@ define([
      */
     postRender: function(){
       this._rendered = true;
-      this.trigger('render');
+      this.trigger('render render:after');
     },
 
     /**
