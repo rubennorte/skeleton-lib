@@ -30,6 +30,29 @@ define([
     templateEngine: null,
 
     /**
+     * Gets or sets the value of one o multiple template variables, e.g.,
+     *   templateVar('name', 'value') => this
+     *   templateVar({name: 'value', ...}) => this
+     *   templateVar('name') => 'value'
+     */
+    templateVar: function(name, value){
+      this.templateVars = this.templateVars || {};
+
+      var singleArgument = arguments.length === 1;
+
+      if (singleArgument && !_.isObject(name))
+        return this.templateVars[name];
+
+      if (singleArgument){
+        _.extend(this.templateVars, name);
+      } else {
+        this.templateVars[name] = value;
+      }
+
+      return this;
+    },
+
+    /**
      * Backbone render redefined to render the specified template,
      * delegate the events and set the _rendered flag as true
      */
