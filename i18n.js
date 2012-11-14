@@ -19,6 +19,15 @@ define([
   var rLocale = /^([a-zA-Z]{2})([\-_]([a-zA-Z]{2}))?$/,
       rStrictLocale = /^([a-z]{2})([_]([A-Z]{2}))?$/;
 
+  var LOCALE_FORMAT_ERROR = 'The locale must have a valid format ' +
+    '(e.g. en, es_ES)';
+
+  // Ensure i18n configuration object is defined
+  config.i18n = _.defaults({}, config.i18n, {
+    defaultLocale: 'en',
+    availableLocales: null
+  });
+
   /**
    * Skeleton I18n module definition
    */
@@ -26,6 +35,9 @@ define([
 
     // Current locale
     _locale: null,
+
+    // Default locale
+    _defaultLocale: config.i18n.defaultLocale,
 
     // The object containing the current locale translations
     _translations: {},
@@ -36,7 +48,7 @@ define([
     // List of all available locales.
     // If null, the existence of each locale file is not verified before
     // trying to load it
-    _availableLocales: null,
+    _availableLocales: config.i18n.availableLocales,
     
     /**
      * Translates the specified parameter.
@@ -48,6 +60,12 @@ define([
 
       switch (typeof(text)){
         case 'string':
+        case 'number':
+        case 'boolean':
+          
+          if (typeof(text) === 'number') text = '' + text;
+          else if (typeof(text) === 'boolean') text = text ? 'true' : 'false';
+
           // If text is a string, search in translation object
           if (!this._translations[text] && !this._missingTranslations[text]){
             // The translation is not found, so increment the counter for
@@ -67,7 +85,13 @@ define([
           // If text is an object, get the translations from it according
           // to the current locale
           if (this._locale in text) text = text[this._locale];
-          else text = text[config.i18n.defaultLocale];
+          else text = text[this._defaultLocale];
+          break;
+
+        case 'function':
+          // If text is a function, get the result of this function passing
+          // the locale as a parameter
+          text = text(this._locale);
           break;
 
         default:
@@ -81,20 +105,11 @@ define([
       return text;
     },
 
-    // Localize function (for dates)
-    // TODO
-    l: function(dateTime){
-      // Convert into a date object if it's not
-      if (!(dateTime instanceof Date))
-        dateTime = new Date(dateTime);
-      return dateTime.toString();
-    },
-
     /**
      * Returns the default locale according to the information provided
      * by the navigator
      */
-    getDefaultLocale: function(){
+    getUserDefaultLocale: function(){
       var locale;
 
       if (!navigator) return;
@@ -105,6 +120,10 @@ define([
         return locale;
 
       return navigator.language;
+    },
+
+    getDefaultLocale: function(){
+      return this._defaultLocale;
     },
 
     /**
@@ -149,7 +168,7 @@ define([
      */
     setLocale: function(locale, translations, callback){
       if (!rLocale.test(locale))
-        throw new Error('Invalid locale: ' + locale);
+        throw new Error(LOCALE_FORMAT_ERROR + ': ' + locale);
 
       locale = toPOSIXLocale(locale);
 
@@ -169,7 +188,6 @@ define([
         this._setLocaleAndTranslations(locale, translations, callback);
       } else {
         // Otherwise, we have to load them (as AMD modules to cache)
-
         var language = locale.substr(0,2),
             region = locale.substr(3,2),
             localeFiles = [];
@@ -184,15 +202,20 @@ define([
 
         if (localeFiles.length === 0){
           if (callback)
-            callback('There are no translation files for the locale ' + locale);
+            callback('The specified locale is not available: ' + locale);
           return false;
         }
 
         var self = this;
-        require(localeFiles, function(languageTranslations, regionTranslations){
-          var newTranslations = _.extend({}, languageTranslations,
-            regionTranslations);
-          self._setLocaleAndTranslations(locale, newTranslations, callback);
+        require(localeFiles, function(){
+          var translations = {};
+          _.each(arguments, function(current){
+            translations = _.extend(translations, current);
+          });
+          self._setLocaleAndTranslations(locale, translations, callback);
+        }, function(err){
+          if (callback)
+            callback('Any translation file cannot be loaded');
         });
       }
     },
@@ -203,10 +226,23 @@ define([
     setAvailableLocales: function(availableLocales){
       _(availableLocales).each(function(availableLocale){
         if (!rStrictLocale.test(availableLocale))
-          throw new Error('All the locale filenames must have a valid POSIX' +
-            ' format (en | en_US)');
+          throw new Error(LOCALE_FORMAT_ERROR + ': ' + availableLocale);
       });
+      var prevAvailableLocales = this._availableLocales;
       this._availableLocales = availableLocales;
+      this.trigger('change:availableLocales', this, availableLocales, prevAvailableLocales);
+    },
+
+    /**
+     * Sets the default locale
+     */
+    setDefaultLocale: function(locale){
+      if (!rStrictLocale.test(locale))
+        throw new Error(LOCALE_FORMAT_ERROR + ': ' + locale);
+
+      var prevLocale = this._defaultLocale;
+      this._defaultLocale = locale;
+      this.trigger('change:defaultLocale', this, locale, prevLocale);
     },
 
     // Returns the URL of the JSON containing the translations for the specified
@@ -217,8 +253,7 @@ define([
 
     // Assigns the locale, the translations object and invokes the callback
     _setLocaleAndTranslations: function(locale, translations, callback){
-      if (this._locale !== locale ||
-        !_.isEqual(this._translations, translations)){
+      if (this._locale !== locale || !_.isEqual(this._translations, translations)){
         console.info('skeleton/i18n', 'Locale set to', locale);
         this._locale = locale;
         this._translations = translations;
@@ -240,9 +275,6 @@ define([
     return locale.substr(0,2).toLowerCase() + '_' +
       locale.substr(3,2).toUpperCase();
   }
-
-  // Bind all the public functions
-  _.bindAll(I18n, 't', 'l', 'getLocale', 'setLocale');
 
   return I18n;
 
