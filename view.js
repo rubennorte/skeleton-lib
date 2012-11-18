@@ -8,12 +8,9 @@
 define([
   'backbone',
   'underscore',
-  'config',
-  './i18n',
   './views/helpers/default',
   './views/template-engines/underscore'
-], function(Backbone, _, Config, I18n, DefaultHelpers,
-  UnderscoreTemplateEngine){
+], function(Backbone, _, DefaultHelpers, UnderscoreTemplateEngine){
 
   'use strict';
 

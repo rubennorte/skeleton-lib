@@ -10,7 +10,7 @@ define([
   'config',
   './util/url',
   'underscore'
-], function(Backbone, config, URL, _){
+], function(Backbone, config, url, _){
 
   'use strict';
 
@@ -26,7 +26,7 @@ define([
       // Set default options
       options = options || {};
       if (typeof(options.root) === 'undefined')
-        options.root = URL.parseUri(config.url.root).path;
+        options.root = url.parseUri(config.url.root).path;
       if (typeof(options.pushState) === 'undefined')
         options.pushState = true;
 
