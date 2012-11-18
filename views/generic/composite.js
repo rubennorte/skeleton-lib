@@ -14,13 +14,13 @@ define([
   
   var CompositeView = View.extend({
 
-     constructor: function(){
-       // super();
-       View.apply(this, arguments);
+    constructor: function(){
+      // super();
+      View.apply(this, arguments);
  
-       // Initialize views object
-       if (!this.views) this.views = {};
-     },
+      // Initialize views object
+      if (!this.views) this.views = {};
+    },
 
     getView: function(selector){
       return this.views[selector];
