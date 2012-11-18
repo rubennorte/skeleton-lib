@@ -14,7 +14,13 @@ define([
   
   var CompositeView = View.extend({
 
-    views: {},
+     constructor: function(){
+       // super();
+       View.apply(this, arguments);
+ 
+       // Initialize views object
+       if (!this.views) this.views = {};
+     },
 
     getView: function(selector){
       return this.views[selector];
@@ -25,8 +31,26 @@ define([
       if (this.views[selector])
         this.views[selector].remove();
 
-      this.views[selector] = view;
+      if (view){
+        this.views[selector] = view;
+      } else {
+        delete this.views[selector];
+      }
+
       this.refresh();
+    },
+
+    removeView: function(selectorOrView){
+      if (_.isString(selectorOrView)){
+        this.setView(selectorOrView, null);
+      } else {
+        _.find(this.views, function(view, selector){
+          if (view === selectorOrView){
+            this.setView(selector, null);
+            return true;
+          }
+        });
+      }
     },
 
     doRender: function(){

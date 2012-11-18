@@ -11,25 +11,27 @@ define([
 ], function(View, _){
   
   'use strict';
-  
-  /**
-   * Skeleton list view definition
-   */
+
   var ListView = View.extend({
 
-    _itemViews: [],
+    constructor: function(){
+      // super();
+      View.apply(this, arguments);
 
-    options: {
-      // Instances of this view class will be created for each model in the list
-      ItemView: null,
+      // Initialize _itemViews if it's not
+      if (!this._itemViews) this._itemViews = [];
 
-      // jQuery-like selector where the item views will be appended to
-      listSelector: null
-    },
+      _.defaults(this.options, {
+        // Instances of this view class will be created for each model in the list
+        ItemView: null,
 
-    initialize: function(){
+        // jQuery-like selector where the item views will be appended to
+        listSelector: null
+      });
+
       // Create all the views for the list items
       this.createItemViews();
+
       // Bind events
       this.collection.on('reset', this.onReset, this);
       this.collection.on('add', this.onAdd, this);
