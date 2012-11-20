@@ -8,8 +8,8 @@
 define([
   'backbone',
   'underscore',
-  './views/helpers/default',
-  './views/template-engines/underscore'
+  './helpers/default',
+  './template-engines/underscore'
 ], function(Backbone, _, DefaultHelpers, UnderscoreTemplateEngine){
 
   'use strict';

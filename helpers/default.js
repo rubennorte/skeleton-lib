@@ -10,8 +10,8 @@ define([
   'underscore',
   // Used through underscore reference
   'underscore.string',
-  '../../i18n',
-  '../../util/url'
+  '../i18n',
+  '../util/url'
 ], function(config, _, _s, I18n, url){
 
   'use strict';
