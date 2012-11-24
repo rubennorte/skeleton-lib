@@ -14,15 +14,15 @@ define(function(){
   // URL related config
   config.url = {};
   config.url.root = '/';
-  config.url.assets = '/';
-  config.url.images = 'images';
-  config.url.stylesheets = 'stylesheets';
+  config.url.assets = config.url.root + 'assets/';
+  config.url.images = config.url.assets + 'images/';
+  config.url.stylesheets = config.url.assets + 'stylesheets/';
 
   config.url.backend = '/';
   
   // I18n related config
   config.i18n = {};
-  config.i18n.loadPath = 'data/locales/';
+  config.i18n.loadPath = config.url.assets + 'locales/';
   config.i18n.defaultLocale = 'en';
 
   // Log config
