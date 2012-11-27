@@ -45,8 +45,7 @@ define([
     // I18n and its main functions
     I18n: I18n,
     t: I18n.t,
-    l: I18n.l,
-
+    
     /**
      * Returns the backend url for the specified path
      */
