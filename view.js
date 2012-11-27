@@ -115,6 +115,9 @@ define([
     remove: function(){
       this.dispose();
       this.$el.remove();
+      if (!this._removed) // Avoids infinite recursion
+        this.trigger('remove', this);
+      this._removed = true;
       return this;
     },
 
