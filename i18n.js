@@ -85,7 +85,7 @@ define([
           // If text is an object, get the translations from it according
           // to the current locale
           if (this._locale in text) text = text[this._locale];
-          else text = text[this._defaultLocale];
+          else if (this._defaultLocale in text) text = text[this._defaultLocale];
           break;
 
         case 'function':
@@ -93,9 +93,6 @@ define([
           // the locale as a parameter
           text = text(this._locale);
           break;
-
-        default:
-          throw new Error('String or object parameter expected');
       }
 
       // If the key is not the only specified parameter, return interpolated
