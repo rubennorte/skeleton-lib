@@ -38,27 +38,12 @@ define([
         return;
       }
 
-      // Increment loading count (o set as 1)
-      if (!this._loading)
-        this._loading = 1;
-      else
-        this._loading++;
+      // Increment loading count (o set to 1)
+      this._loading = (this._loading || 0) + 1;
 
       // Set new success and error callbacks
-      var self = this,
-          success = options.success,
-          error = options.error;
-      options.success = function(){
-        self._loading--;
-        self._loaded = true;
-        if (success) success.apply(self, arguments);
-        else self.trigger('sync', self);
-      };
-      options.error = function(){
-        self._loading--;
-        if (error) error.apply(self, arguments);
-        else self.trigger('error', self);
-      };
+      options.success = bindSuccess(this, options.success);
+      options.error = bindError(this, options.error);
 
       // Trigger syncing event
       this.trigger('syncing', this, options);
@@ -118,6 +103,30 @@ define([
     }
 
   });
+
+  /**
+   * Returns a new success function that updates the loading count
+   * and the loaded flag.
+   */
+  function bindSuccess(model, success){
+    return function(){
+      model._loading--;
+      model._loaded = true;
+      if (success) success.apply(model, arguments);
+      else model.trigger('sync', model);
+    };
+  }
+
+  /**
+   * Returns a new error function that updates the loading count
+   */
+  function bindError(model, error){
+    return function(){
+      model._loading--;
+      if (error) error.apply(model, arguments);
+      else model.trigger('error', model);
+    };
+  }
 
   /**
    * Returns the selected keys of the specified object.

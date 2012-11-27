@@ -47,31 +47,15 @@ define([
       }
 
       // Send stored data (for pagination, filtering, etc.)
-      if (!options.data && !_(this._data).isEmpty()){
+      if (!options.data && !_(this._data).isEmpty())
         options.data = this._data;
-      }
 
       // Increment loading count (o set to 1)
-      if (!this._loading)
-        this._loading = 1;
-      else
-        this._loading++;
+      this._loading = (this._loading || 0) + 1;
 
       // Set new success and error callbacks
-      var self = this,
-          success = options.success,
-          error = options.error;
-      options.success = function(){
-        self._loading--;
-        self._loaded = true;
-        if (success) success.apply(self, arguments);
-        else self.trigger('sync', self);
-      };
-      options.error = function(){
-        self._loading--;
-        if (error) error.apply(self, arguments);
-        else self.trigger('error', self);
-      };
+      options.success = bindSuccess(this, options.success);
+      options.error = bindError(this, options.error);
 
       // Trigger loading event
       this.trigger('loading', this, options);
@@ -104,6 +88,30 @@ define([
     }
 
   });
+
+  /**
+   * Returns a new success function that updates the loading count
+   * and the loaded flag.
+   */
+  function bindSuccess(collection, success){
+    return function(){
+      collection._loading--;
+      collection._loaded = true;
+      if (success) success.apply(collection, arguments);
+      else collection.trigger('sync', collection);
+    };
+  }
+
+  /**
+   * Returns a new error function that updates the loading count
+   */
+  function bindError(collection, error){
+    return function(){
+      collection._loading--;
+      if (error) error.apply(collection, arguments);
+      else collection.trigger('error', collection);
+    };
+  }
 
   return Collection;
   
