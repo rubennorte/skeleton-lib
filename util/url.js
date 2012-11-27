@@ -9,7 +9,7 @@ define(function(){
 
   'use strict';
 
-    return {
+  return {
 
     /**
      * Joins the specified url fragments in another valid url fragment

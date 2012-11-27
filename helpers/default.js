@@ -16,22 +16,6 @@ define([
 
   'use strict';
 
-  /**
-   * Joins the specified url fragments, starting from the end, util the current
-   * fragment contains the host part
-   */
-  function joinUntilHost(){
-    var fragments = _(arguments).toArray(),
-        urlStr = '';
-    while (fragments.length > 0){
-      var fragment = fragments.pop();
-      var parsed = url.parseUri(fragment);
-      if (parsed.host) return url.join(fragment, urlStr);
-      else urlStr = url.join(fragment, urlStr);
-    }
-    return urlStr;
-  }
-
   return {
 
     // Config object
@@ -50,37 +34,35 @@ define([
      * Returns the backend url for the specified path
      */
     backendUrl: function(path){
-      return url.join(config.url.backend, path);
+      return url.join(_.result(config.url, 'backend'), path);
     },
 
     /**
      * Returns the url of the specified path relative to the app root url
      */
     urlTo: function(dst){
-      return joinUntilHost(config.url.root, dst);
+      return url.join(_.result(config.url, 'root'), dst);
     },
 
     /**
      * Returns the url of the specified path relative to the assets url
      */
     assetUrl: function(src){
-      return joinUntilHost(config.url.root, config.url.assets, src);
+      return url.join(_.result(config.url, 'assets'), src);
     },
 
     /**
      * Returns the url of the specified path relative to the images url
      */
     imageUrl: function(src){
-      return joinUntilHost(config.url.root, config.url.assets,
-        config.url.images, src);
+      return url.join(_.result(config.url, 'images'), src);
     },
 
     /**
      * Returns the url of the specified path relative to the stylesheets url
      */
     stylesheetUrl: function(src){
-      return joinUntilHost(config.url.root, config.url.assets,
-        config.url.stylesheets, src);
+      return url.join(_.result(config.url, 'stylesheets'), src);
     }
   };
 });

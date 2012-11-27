@@ -245,7 +245,7 @@ define([
     // Returns the URL of the JSON containing the translations for the specified
     // locale
     _getLocaleUrl: function(locale){
-      return url.join(config.i18n.loadPath, locale + '.json');
+      return url.join(_.result(config.i18n, 'loadPath'), locale + '.json');
     },
 
     // Assigns the locale, the translations object and invokes the callback

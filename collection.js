@@ -84,7 +84,7 @@ define([
      * Returns the backend url for the specified path
      */
     backendUrl: function(path){
-      return url.join(config.url.backend, path);
+      return url.join(_.result(config.url, 'backend'), path);
     }
 
   });
