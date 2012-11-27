@@ -7,7 +7,7 @@
 
 define([
   'underscore',
-  'url'
+  './util/url'
 ], function(_, URL){
 
   'use strict';
