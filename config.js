@@ -22,7 +22,7 @@ define(function(){
   
   // I18n related config
   config.i18n = {};
-  config.i18n.loadPath = config.url.assets + 'locales/';
+  config.i18n.loadPath = 'locales';
   config.i18n.defaultLocale = 'en';
 
   // Log config
