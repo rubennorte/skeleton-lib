@@ -51,11 +51,13 @@ define([
       options.success = function(){
         self._loading--;
         self._loaded = true;
-        if (success) success();
+        if (success) success.apply(self, arguments);
+        else self.trigger('sync', self);
       };
       options.error = function(){
         self._loading--;
-        if (error) error();
+        if (error) error.apply(self, arguments);
+        else self.trigger('error', self);
       };
 
       // Trigger syncing event
