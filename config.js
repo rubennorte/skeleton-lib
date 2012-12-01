@@ -35,7 +35,7 @@ define([
 
   // Log config
   config.log = {};
-  config.log.level = 4; // ERROR
+  config.log.level = 'error';
 
   return config;
 

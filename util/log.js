@@ -31,25 +31,22 @@ define([
     return root.console;
   }
 
+  var LOG_PRIORITIES = {
+    trace:  0,
+    debug:  1,
+    info:   2,
+    warn:   3,
+    error:  4,
+    log:    5,  // Force log
+    silent: 6   // No log message is printed at this level
+  };
+
+
   // Reference to the original console object
   var console = root.console;
 
-  // Log levels
-  var LOG_LEVELS = {
-    TRACE:  0,
-    DEBUG:  1,
-    INFO:   2,
-    WARN:   3,
-    ERROR:  4,
-    LOG:    5,  // Force log
-    SILENT: 6   // No log message is printed at this level
-  };
-
-  // Which methods correspond this log methods to
-  var METHOD_MAPPING = ['trace', 'debug', 'info', 'warn', 'error', 'log'],
-      LOG_TAGS = ['T', 'D', 'I', 'W', 'E', 'L'];
-
-  var logLevel = LOG_LEVELS.ERROR;
+  // Current log level
+  var logLevel = 'trace'; // Print all messages by default
 
   /**
    * Console redefinition
@@ -57,7 +54,10 @@ define([
   root.console = {
 
     // Original console
-    _orig: console,
+    _console: console,
+
+    LOG_LEVELS: ['trace', 'debug', 'info', 'warn', 'error', 'log'],
+    LOG_TAGS: ['T', 'D', 'I', 'W', 'E', 'L'],
    
     /**
      * Returns the date that will be printed on the log
@@ -80,64 +80,56 @@ define([
      * Determines if a log message with the specified level would be printed
      */
     isLoggable: function(level){
-      return logLevel <= level;
+      return LOG_PRIORITIES[logLevel] <= LOG_PRIORITIES[level];
     },
 
     /**
      * Logs the message unless the log is silenced
      */
     log: function(){
-      return this._doLog(this.LOG, arguments);
+      return this._doLog("log", arguments);
     },
 
     trace: function(){
-      return this._doLog(this.TRACE, arguments);
+      return this._doLog("trace", arguments);
     },
     
     debug: function(){
-      return this._doLog(this.DEBUG, arguments);
+      return this._doLog("debug", arguments);
     },
     
     info: function(){
-      return this._doLog(this.INFO, arguments);
+      return this._doLog("info", arguments);
     },
     
     warn: function(){
-      return this._doLog(this.WARN, arguments);
+      return this._doLog("warn", arguments);
     },
     
     error: function(){
-      return this._doLog(this.ERROR, arguments);
+      return this._doLog("error", arguments);
     },
 
     _doLog: function(level, args){
-      if (logLevel <= level){
-        var method = METHOD_MAPPING[level];
+      var priority = LOG_PRIORITIES[level];
+      var logPriority = LOG_PRIORITIES[logLevel];
+
+      if (logPriority <= priority){
 
         if (typeof(args[0]) === 'string'){
           args[0] = _s.sprintf('%s | %s | %s',
           this.formatDate(new Date()),
-          LOG_TAGS[level],
+          this.LOG_TAGS[priority],
           args[0]);
         }
 
-        // Look for the closest available log method
-        for (var i=level; i<METHOD_MAPPING.length; i++){
-          if (typeof(console[method]) === 'function'){
-            return console[method].apply(console, args);
-          }
-        }
-        
+        var method = this.LOG_LEVELS[priority];
+        return console[method].apply(console, args);
       }
       return false;
     }
 
   };
-
-  // Save log levels in console object
-  for (var level in LOG_LEVELS)
-    if (LOG_LEVELS.hasOwnProperty(level))
-      root.console[level] = LOG_LEVELS[level];
 
   return root.console;
 
