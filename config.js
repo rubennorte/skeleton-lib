@@ -28,10 +28,12 @@ define([
 
   config.url.backend = '/';
   
-  // I18n related config
+  // I18n config
   config.i18n = {};
   config.i18n.loadPath = 'locales';
   config.i18n.defaultLocale = 'en';
+  config.i18n.locale = 'en';
+  config.i18n.availableLocales = null;
 
   // Log config
   config.log = {};

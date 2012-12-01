@@ -7,12 +7,11 @@
 
 define([
   'require',
-  'config',
   'backbone',
   'underscore',
   'underscore.string',
   './util/url'
-], function(require, config, Backbone, _, _s, url){
+], function(require, Backbone, _, _s, url){
 
   'use strict';
 
@@ -21,12 +20,6 @@ define([
 
   var LOCALE_FORMAT_ERROR = 'The locale must have a valid format ' +
     '(e.g. en, es_ES)';
-
-  // Ensure i18n configuration object is defined
-  config.i18n = _.defaults({}, config.i18n, {
-    defaultLocale: 'en',
-    availableLocales: null
-  });
 
   /**
    * Skeleton I18n module definition
@@ -37,7 +30,7 @@ define([
     _locale: null,
 
     // Default locale
-    _defaultLocale: config.i18n.defaultLocale,
+    _defaultLocale: null,
 
     // The object containing the current locale translations
     _translations: {},
@@ -48,7 +41,10 @@ define([
     // List of all available locales.
     // If null, the existence of each locale file is not verified before
     // trying to load it
-    _availableLocales: config.i18n.availableLocales,
+    _availableLocales: null,
+
+    // Relative path to the locale directory
+    _loadPath: '',
     
     /**
      * Translates the specified parameter.
@@ -242,10 +238,17 @@ define([
       this.trigger('change:defaultLocale', this, locale, prevLocale);
     },
 
+    /**
+     * Sets the locale file load path
+     */
+    setLoadPath: function(path){
+      this._loadPath = path;
+    },
+
     // Returns the URL of the JSON containing the translations for the specified
     // locale
     _getLocaleUrl: function(locale){
-      return url.join(_.result(config.i18n, 'loadPath'), locale + '.json');
+      return url.join(_.result(this, '_loadPath'), locale + '.json');
     },
 
     // Assigns the locale, the translations object and invokes the callback
