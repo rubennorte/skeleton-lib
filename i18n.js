@@ -199,17 +199,7 @@ define([
           return false;
         }
 
-        var self = this;
-        require(localeFiles, function(){
-          var translations = {};
-          _.each(arguments, function(current){
-            translations = _.extend(translations, current);
-          });
-          self._setLocaleAndTranslations(locale, translations, callback);
-        }, function(err){
-          if (callback)
-            callback('Any translation file cannot be loaded');
-        });
+        this._loadLocaleFiles(locale, localeFiles, callback);
       }
     },
 
@@ -261,6 +251,37 @@ define([
         this.trigger('change:locale', this);
       }
       if (callback) callback(null, locale);
+    },
+
+    // Loads the locale files and merges the translation objects
+    // into one
+    _loadLocaleFiles: function(locale, localeFiles, callback){
+      var self = this;
+
+      var results = 0;
+      var resultTranslations = _.map(localeFiles, function(){
+        return {};
+      });
+
+      var onResponse = function(){
+        results++;
+        if (results === resultTranslations.length){
+          var translations = {};
+          _.each(resultTranslations, function(current){
+            translations = _.extend(translations, current);
+          });
+          self._setLocaleAndTranslations(locale, translations, callback);
+        }
+      };
+
+      _.each(localeFiles, function(localeFile, index){
+        require([localeFile], function(localeTranslations){
+          resultTranslations[index] = localeTranslations;
+          onResponse();
+        }, function(){
+          onResponse();
+        });
+      });
     }
 
   });
