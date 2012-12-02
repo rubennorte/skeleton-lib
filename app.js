@@ -15,30 +15,44 @@ define([
 
   'use strict';
 
-  // Triggers the initialization event and,
-  // when all returned promises has been resolved, resolves the event promise
-  // If it fails, it calls initializationError with the event name and the error arguments
+  // Triggers the initialization event and, when all returned promises has been
+  // resolved, resolves the event promise. If it fails, it calls
+  // initializationError with the event name and the error arguments
   function triggerInitializationEvent(event, eventPromise){
-    var promiseAggregator = new PromiseAggregator();
     /*jshint validthis:true */
+
+    // Trigger initialization event
+    var promiseAggregator = new PromiseAggregator();
     this.trigger(event, promiseAggregator);
-    $.when.apply(null, promiseAggregator.all()).then(eventPromise.resolve, _.bind(this.initializationError, this, event));
+
+    // Resolve event promise when all initialization promises have been resolved
+    var initializationError = _.bind(this.initializationError, this, event);
+    $.when.apply(null, promiseAggregator.all())
+        .then(eventPromise.resolve, initializationError);
   }
 
   // When the previous event has finished, triggers the current event
   // and returns its promise
   function triggerWhen(previous, event){
-    var current = $.Deferred();
     /*jshint validthis:true */
-    $.when(previous).done(_.bind(triggerInitializationEvent, this, event, current));
-    return current;
+    // Create event promise
+    var current = $.Deferred();
+    var boundTrigger = _.bind(triggerInitializationEvent, this, event, current);
+
+    // Trigger initialization event when the previous promise is resolved
+    $.when(previous).done(boundTrigger);
+
+    // Return the current promise
+    return current.promise();
   }
 
   function App(){}
 
   _.extend(App.prototype, Backbone.Events, {
 
-    INITIALIZATION_EVENTS: ['initialize:before', 'initialize', 'initialize:after'],
+    INITIALIZATION_EVENTS: [
+      'initialize:before', 'initialize', 'initialize:after'
+    ],
 
     initialize: function(){
       _.reduce(this.INITIALIZATION_EVENTS, triggerWhen, true, this);
