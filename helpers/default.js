@@ -34,35 +34,46 @@ define([
      * Returns the backend url for the specified path
      */
     backendUrl: function(path){
-      return url.join(_.result(config.url, 'backend'), path);
+      var parsed = url.parse(path);
+      if (parsed.host) return path;
+      else return url.join(_.result(config.url, 'backend'), path);
     },
 
     /**
      * Returns the url of the specified path relative to the app root url
      */
     urlTo: function(dst){
-      return url.join(_.result(config.url, 'root'), dst);
+      var parsed = url.parse(dst);
+      if (parsed.host) return dst;
+      else return url.join(_.result(config.url, 'root'), dst);
     },
 
     /**
      * Returns the url of the specified path relative to the assets url
      */
     assetUrl: function(src){
-      return url.join(_.result(config.url, 'assets'), src);
+      var parsed = url.parse(src);
+      if (parsed.host) return src;
+      else return url.join(_.result(config.url, 'assets'), src);
     },
 
     /**
      * Returns the url of the specified path relative to the images url
      */
     imageUrl: function(src){
-      return url.join(_.result(config.url, 'images'), src);
+      var parsed = url.parse(src);
+      if (parsed.host) return src;
+      else return url.join(_.result(config.url, 'images'), src);
     },
 
     /**
      * Returns the url of the specified path relative to the stylesheets url
      */
     stylesheetUrl: function(src){
-      return url.join(_.result(config.url, 'stylesheets'), src);
+      var parsed = url.parse(src);
+      if (parsed.host) return src;
+      else return url.join(_.result(config.url, 'stylesheets'), src);
     }
+    
   };
 });
