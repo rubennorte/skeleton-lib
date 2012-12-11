@@ -16,10 +16,11 @@ define(function(){
      */
     join: function(url){
       // Remove trailing slash
+      url = url || '';
       if (url.charAt(url.length-1) === '/') url = url.slice(0, -1);
 
       for (var i=1; i<arguments.length; i++){
-        var part = arguments[i];
+        var part = arguments[i] || '';
         // Add leading slash
         if (part.charAt(0) !== '/') part = '/' + part;
         // Remove trailing slash
