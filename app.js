@@ -7,11 +7,10 @@
 
 define([
   'backbone',
-  './util/extend',
   'underscore',
   'jquery',
   './util/promise-aggregator'
-], function(Backbone, extend, _, $, PromiseAggregator){
+], function(Backbone, _, $, PromiseAggregator){
 
   'use strict';
 
@@ -62,7 +61,7 @@ define([
 
   });
 
-  App.extend = extend;
+  App.extend = Backbone.Model.extend;
 
   return App;
 
