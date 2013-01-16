@@ -78,10 +78,12 @@ define([
           break;
 
         case 'object':
-          // If text is an object, get the translations from it according
-          // to the current locale
-          if (this._locale in text) text = text[this._locale];
-          else if (this._defaultLocale in text) text = text[this._defaultLocale];
+          if (text){
+            // If text is an object (and not null), get the translations from it according
+            // to the current locale
+            if (this._locale in text) text = text[this._locale];
+            else if (this._defaultLocale in text) text = text[this._defaultLocale];
+          }
           break;
 
         case 'function':
@@ -91,9 +93,10 @@ define([
           break;
       }
 
-      // If the key is not the only specified parameter, return interpolated
-      if (arguments.length > 1)
+      // If text is a string and the key is not the only specified parameter, return interpolated
+      if (typeof text === 'string' && arguments.length > 1){
         return _s.sprintf.apply(null, arguments);
+      }
       
       return text;
     },
