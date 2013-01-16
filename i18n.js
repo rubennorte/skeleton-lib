@@ -102,20 +102,26 @@ define([
     },
 
     /**
-     * Returns the default locale according to the information provided
+     * Returns the system locale according to the information provided
      * by the navigator
      */
-    getUserDefaultLocale: function(){
-      var locale;
+    getSystemLocale: function(fn){
+      if (!navigator){
+        return fn(null, this.getDefaultLocale());
+      }
 
-      if (!navigator) return;
+      // Phonegap support
+      if (navigator.globalization && typeof navigator.globalization.getLocaleName === 'function'){
+        navigator.globalization.getLocaleName(function(locale){
+          fn(null, locale);
+        }, function(err){
+          fn(err);
+        });
+        return;
+      }
 
-      // Android fix
-      if (navigator.userAgent &&
-        (locale = navigator.userAgent.match(/android.*\W(\w\w)-(\w\w)\W/i)))
-        return locale;
-
-      return navigator.language;
+      var locale = toPOSIXLocale(navigator.language);
+      fn(null, locale);
     },
 
     getDefaultLocale: function(){
