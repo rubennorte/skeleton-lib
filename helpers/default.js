@@ -34,7 +34,7 @@ define([
      * Returns the backend url for the specified path
      */
     backendUrl: function(path){
-      var parsed = url.parse(path);
+      var parsed = url.parseUri(path);
       if (parsed.host) return path;
       else return url.join(_.result(config.url, 'backend'), path);
     },
@@ -43,7 +43,7 @@ define([
      * Returns the url of the specified path relative to the app root url
      */
     urlTo: function(dst){
-      var parsed = url.parse(dst);
+      var parsed = url.parseUri(dst);
       if (parsed.host) return dst;
       else return url.join(_.result(config.url, 'root'), dst);
     },
@@ -52,7 +52,7 @@ define([
      * Returns the url of the specified path relative to the assets url
      */
     assetUrl: function(src){
-      var parsed = url.parse(src);
+      var parsed = url.parseUri(src);
       if (parsed.host) return src;
       else return url.join(_.result(config.url, 'assets'), src);
     },
@@ -61,7 +61,7 @@ define([
      * Returns the url of the specified path relative to the images url
      */
     imageUrl: function(src){
-      var parsed = url.parse(src);
+      var parsed = url.parseUri(src);
       if (parsed.host) return src;
       else return url.join(_.result(config.url, 'images'), src);
     },
@@ -70,7 +70,7 @@ define([
      * Returns the url of the specified path relative to the stylesheets url
      */
     stylesheetUrl: function(src){
-      var parsed = url.parse(src);
+      var parsed = url.parseUri(src);
       if (parsed.host) return src;
       else return url.join(_.result(config.url, 'stylesheets'), src);
     }
