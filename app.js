@@ -41,7 +41,7 @@ define([
     Q.all(previous).done(boundTrigger);
 
     // Return the current promise
-    return current.promise();
+    return current.promise;
   }
 
   function App(){}
@@ -53,7 +53,7 @@ define([
     ],
 
     initialize: function(){
-      _.reduce(this.INITIALIZATION_EVENTS, triggerWhen, true, this);
+      _.reduce(this.INITIALIZATION_EVENTS, triggerWhen, [], this);
     },
 
     initializationError: function(event /*, errorArgs... */){}
