@@ -8,9 +8,9 @@
 define([
   'backbone',
   'underscore',
-  'jquery',
+  'q',
   './util/promise-aggregator'
-], function(Backbone, _, $, PromiseAggregator){
+], function(Backbone, _, Q, PromiseAggregator){
 
   'use strict';
 
@@ -26,8 +26,7 @@ define([
 
     // Resolve event promise when all initialization promises have been resolved
     var initializationError = _.bind(this.initializationError, this, event);
-    $.when.apply(null, promiseAggregator.all())
-        .then(eventPromise.resolve, initializationError);
+    Q.all(promiseAggregator.all()).then(eventPromise.resolve, initializationError);
   }
 
   // When the previous event has finished, triggers the current event
@@ -35,11 +34,11 @@ define([
   function triggerWhen(previous, event){
     /*jshint validthis:true */
     // Create event promise
-    var current = $.Deferred();
+    var current = Q.defer();
     var boundTrigger = _.bind(triggerInitializationEvent, this, event, current);
 
     // Trigger initialization event when the previous promise is resolved
-    $.when(previous).done(boundTrigger);
+    Q.all(previous).done(boundTrigger);
 
     // Return the current promise
     return current.promise();
@@ -57,11 +56,11 @@ define([
       _.reduce(this.INITIALIZATION_EVENTS, triggerWhen, true, this);
     },
 
-    initializationError: function(event /*, errorArgs... */){}
+    initializationError: function(event /*, errorArgs... */){},
+
+    extend: Backbone.Model.extend
 
   });
-
-  App.extend = Backbone.Model.extend;
 
   return App;
 
