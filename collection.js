@@ -20,7 +20,7 @@ define([
   var Collection = Backbone.Collection.extend({
 
     _loaded: false,
-    _loading: 0,
+    _loadingCount: 0,
     _data: {},
 
     reset: function(models, options){
@@ -28,6 +28,7 @@ define([
       if (models && models.length > 0)
         this._loaded = true;
 
+      // return super.reset(models, options);
       return Backbone.Collection.prototype.reset.call(this, models, options);
     },
 
@@ -41,24 +42,24 @@ define([
       // If reload option is set to false and collection is not empty,
       // return immediately
       if (options.reload === false && this.isLoaded()){
-        if (options.success) options.success(this);
+        if (options.success) options.success();
+        this.trigger('sync', this, null, options);
+
         // TODO return something that implements the promise interface
         return;
       }
+
+      // Increment loading count
+      this._loadingCount++;
+
+      // Add callbacks to decrease loading count and set loaded to true
+      options.success = bindSuccess(this, options.success);
+      options.error = bindError(this, options.error);
 
       // Send stored data (for pagination, filtering, etc.)
       if (!options.data && !_(this._data).isEmpty())
         options.data = this._data;
 
-      // Increment loading count (o set to 1)
-      this._loading = (this._loading || 0) + 1;
-
-      // Set new success and error callbacks
-      options.success = bindSuccess(this, options.success);
-      options.error = bindError(this, options.error);
-
-      // Trigger loading event
-      this.trigger('loading', this, options);
 
       // return super.fetch(options);
       return Backbone.Collection.prototype.fetch.call(this, options);
@@ -68,14 +69,14 @@ define([
      * Returns true if the model is being loaded from the server
      */
     isLoading: function(){
-      return !!this._loading;
+      return !!this._loadingCount;
     },
 
     /**
      * Returns true if the model has ever been loaded from the server
      */
     isLoaded: function(){
-      return !!this._loaded;
+      return this._loaded;
     }
 
   }, {
@@ -98,7 +99,6 @@ define([
       collection._loading--;
       collection._loaded = true;
       if (success) success.apply(collection, arguments);
-      else collection.trigger('sync', collection);
     };
   }
 
@@ -109,7 +109,6 @@ define([
     return function(){
       collection._loading--;
       if (error) error.apply(collection, arguments);
-      else collection.trigger('error', collection);
     };
   }
 

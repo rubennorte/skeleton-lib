@@ -19,34 +19,33 @@ define([
    */
   var Model = Backbone.Model.extend({
 
-    _loading: false,
-    _loaded: 0,
+    _loaded: false,
+    _loadingCount: 0,
     _data: {},
 
     /**
      * Backbone fetch function, redefined to provide support for reload option
-     * and loading/loaded flags and events
+     * and loading/loaded flags
      */
     fetch: function(options){
       options = options ? _.clone(options) : {};
-
+      
       // If reload option is set to false and model has already been loaded,
       // return immediately
       if (options.reload === false && this.isLoaded()){
-        if (options.success) options.success(this);
+        if (options.success) options.success();
+        this.trigger('sync', this, null, options);
+
         // TODO return something that implements the promise interface
         return;
       }
 
-      // Increment loading count (o set to 1)
-      this._loading = (this._loading || 0) + 1;
+      // Increment loading count
+      this._loadingCount++;
 
-      // Set new success and error callbacks
+      // Add callbacks to decrease loading count and set loaded to true
       options.success = bindSuccess(this, options.success);
       options.error = bindError(this, options.error);
-
-      // Trigger syncing event
-      this.trigger('syncing', this, options);
 
       // return super.fetch(options);
       return Backbone.Model.prototype.fetch.call(this, options);
@@ -56,14 +55,14 @@ define([
      * Returns true if the model is being loaded from the server
      */
     isLoading: function(){
-      return !!this._loading;
+      return !!this._loadingCount;
     },
 
     /**
      * Returns true if the model has ever been loaded from the server
      */
     isLoaded: function(){
-      return !!this._loaded;
+      return this._loaded;
     },
 
     /**
@@ -113,7 +112,6 @@ define([
       model._loading--;
       model._loaded = true;
       if (success) success.apply(model, arguments);
-      else model.trigger('sync', model);
     };
   }
 
@@ -124,7 +122,6 @@ define([
     return function(){
       model._loading--;
       if (error) error.apply(model, arguments);
-      else model.trigger('error', model);
     };
   }
 

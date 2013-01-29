@@ -33,9 +33,9 @@ define([
       this.createItemViews();
 
       // Bind events
-      this.collection.on('reset', this.onReset, this);
-      this.collection.on('add', this.onAdd, this);
-      this.collection.on('remove', this.onRemove, this);
+      this.listenTo(this.collection, 'reset', this.onReset);
+      this.listenTo(this.collection, 'add', this.onAdd);
+      this.listenTo(this.collection, 'remove', this.onRemove);
     },
 
     doRender: function(){
@@ -137,6 +137,17 @@ define([
         return this.$(this.options.listSelector);
       }
       return this.$el;
+    },
+
+    /**
+     * Remove the list and all its items
+     */
+    remove: function(){
+      // Remove sub-views
+      _(this._itemViews).invoke('remove');
+
+      // super.remove();
+      return View.prototype.remove.call(this);
     }
 
   });
