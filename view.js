@@ -65,7 +65,7 @@ define([
      * Triggers the "render:before" event
      */
     preRender: function(){
-      this.trigger('render:before');
+      this.trigger('render:before', this);
     },
 
     /**
@@ -80,7 +80,8 @@ define([
      */
     postRender: function(){
       this._rendered = true;
-      this.trigger('render render:after');
+      this.trigger('render', this);
+      this.trigger('render:after', this);
     },
 
     /**
