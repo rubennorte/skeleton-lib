@@ -9,8 +9,9 @@ define([
   'backbone',
   'underscore',
   './util/url',
-  'config'
-], function(Backbone, _, url, config){
+  'config',
+  'q'
+], function(Backbone, _, url, config, Q){
 
   'use strict';
 
@@ -44,12 +45,14 @@ define([
       // return immediately
       if (options.reload === false && this.isLoaded()){
         if (options.success){
-          options.success();
+          options.success(this, null, options);
         }
         this.trigger('sync', this, null, options);
 
-        // TODO return something that implements the promise interface
-        return;
+        // Return promise to make this function fully compatible with Backbone's
+        var deferred = Q.defer();
+        deferred.resolve();
+        return deferred.promise;
       }
 
       // Increment loading count
@@ -63,7 +66,6 @@ define([
       if (!options.data && !_(this._data).isEmpty()){
         options.data = this._data;
       }
-
 
       // return super.fetch(options);
       return Backbone.Collection.prototype.fetch.call(this, options);

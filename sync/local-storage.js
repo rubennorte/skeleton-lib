@@ -8,8 +8,9 @@
 define([
   'underscore',
   './util/namespace',
-  'backbone'
-], function(_, Namespace, Backbone){
+  'backbone',
+  'q'
+], function(_, Namespace, Backbone, Q){
 
   'use strict';
 
@@ -42,11 +43,15 @@ define([
       options.success(models);
     }
 
-    // TODO return something that implements the promise interface
-    return {};
+    var deferred = Q.defer();
+    deferred.resolve(models);
+    return deferred.promise;
   }
 
   function syncModel(method, model, options){
+
+    var deferred = Q.defer();
+
     // Get the namespace of the model
     var ns = Namespace.get(model, options);
 
@@ -69,12 +74,14 @@ define([
       if (modelData){
         console.info('skeleton/sync/local-storage', 'Data', modelData,
           'returned to model', model);
+        deferred.resolve(modelData);
         if (options.success){
           options.success(modelData);
         }
       } else {
         console.error('skeleton/sync/local-storage', 'Model', model,
           'data not found in localStorage object');
+        deferred.reject('Not found');
         if (options.error){
           options.error('Not found');
         }
@@ -101,6 +108,7 @@ define([
         if (!modelData){
           console.error('skeleton/sync/local-storage', 'Model', model,
             'data not found in localStorage object');
+          deferred.reject('Not found');
           if (options.error){
             options.error('Not found');
           }
@@ -125,14 +133,15 @@ define([
           'data deleted from localStorage object');
       }
 
+      deferred.resolve(modelData);
+      
       // Call the success callback
       if (options.success){
         options.success(modelData);
       }
     }
 
-    // TODO return something that implements the promise interface
-    return {};
+    return deferred.promise;
   }
 
   /**

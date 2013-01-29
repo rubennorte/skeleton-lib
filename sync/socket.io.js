@@ -7,8 +7,9 @@
 
 define([
   './util/namespace',
-  'backbone'
-], function(Namespace, Backbone){
+  'backbone',
+  'q'
+], function(Namespace, Backbone, Q){
 
   'use strict';
 
@@ -40,6 +41,8 @@ define([
     sync: function(method, model, options){
       options = options || {};
 
+      var deferred = Q.defer();
+
       // Get the namespace of the model (or collection)
       var ns = Namespace.get(model);
 
@@ -60,6 +63,7 @@ define([
         if (error){
           console.error('skeleton/sync/socket.io',
             'Error response received from server', error);
+          deferred.reject(error);
           if (options.error){
             options.error(error);
           }
@@ -67,14 +71,14 @@ define([
           console.info('skeleton/sync/socket.io',
             'Synchronization done successfully. Received', response,
             'from server');
+          deferred.resolve(response);
           if (options.success){
             options.success(response);
           }
         }
       });
 
-      // TODO return something that implements the promise interface
-      return {};
+      return deferred.promise;
     },
 
     startSync: function(model){
