@@ -56,11 +56,11 @@ define([
       _.reduce(this.INITIALIZATION_EVENTS, triggerWhen, true, this);
     },
 
-    initializationError: function(event /*, errorArgs... */){},
-
-    extend: Backbone.Model.extend
-
+    initializationError: function(event /*, errorArgs... */){}
+    
   });
+
+  App.extend = Backbone.Model.extend;
 
   return App;
 
