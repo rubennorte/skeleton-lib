@@ -37,8 +37,9 @@ define([
 
       var singleArgument = arguments.length === 1;
 
-      if (singleArgument && !_.isObject(name))
+      if (singleArgument && !_.isObject(name)){
         return this.templateVars[name];
+      }
 
       if (singleArgument){
         _.extend(this.templateVars, name);
@@ -88,8 +89,9 @@ define([
      * Renders the view if it was already rendered
      */
     refresh: function(){
-      if (this._rendered)
+      if (this._rendered){
         this.render();
+      }
       return this;
     },
 

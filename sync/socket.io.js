@@ -60,12 +60,16 @@ define([
         if (error){
           console.error('skeleton/sync/socket.io',
             'Error response received from server', error);
-          if (options.error) options.error(error);
+          if (options.error){
+            options.error(error);
+          }
         } else {
           console.info('skeleton/sync/socket.io',
             'Synchronization done successfully. Received', response,
             'from server');
-          if (options.success) options.success(response);
+          if (options.success){
+            options.success(response);
+          }
         }
       });
 
@@ -76,7 +80,9 @@ define([
     startSync: function(model){
       // If model is not defined assume that it has been extended
       // with this module
-      if (!model) model = this;
+      if (!model){
+        model = this;
+      }
 
       // If models property is defined, assume that it's a collection
       if (model instanceof Backbone.Collection){
@@ -93,7 +99,9 @@ define([
     stopSync: function(model){
       // If model is not defined assume that it has been extended
       // with this module
-      if (!model) model = this;
+      if (!model){
+        model = this;
+      }
 
       var ns = Namespace.get(model);
 
@@ -117,11 +125,14 @@ define([
       console.debug('skeleton/sync/socket.io', 'Data', data,
         'received from server to create in collection', collection);
 
-      if (!data) return;
+      if (!data){
+        return;
+      }
 
       // If the returned value is a single model data, insert into an array
-      if (!(data instanceof Array)) data = [data];
-
+      if (!(data instanceof Array)){
+        data = [data];
+      }
 
       for (var i=0; i<data.length; i++){
         var modelData = data[i];

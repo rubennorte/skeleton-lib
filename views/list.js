@@ -19,7 +19,9 @@ define([
       View.apply(this, arguments);
 
       // Initialize _itemViews if it's not
-      if (!this._itemViews) this._itemViews = [];
+      if (!this._itemViews){
+        this._itemViews = [];
+      }
 
       _.defaults(this.options, {
         // Instances of this view class will be created for each model in the list
@@ -57,8 +59,9 @@ define([
       this.createItemViews();
 
       // Populate the list again (the old items were previously removed)
-      if (this._rendered)
+      if (this._rendered){
         this.populateList();
+      }
     },
 
     /**

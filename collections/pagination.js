@@ -58,8 +58,9 @@ define([
       // If perPage has changed or collection has grown
       // check if page is in the valid range.
       var totalPages = getTotalPages(this.size(), opts.perPage);
-      if (opts.page > totalPages)
+      if (opts.page > totalPages){
         opts.page = totalPages;
+      }
 
       // Retrieve paginated models
       var from = (opts.page-1)*opts.perPage,

@@ -17,14 +17,20 @@ define(function(){
     join: function(url){
       // Remove trailing slash
       url = url || '';
-      if (url.charAt(url.length-1) === '/') url = url.slice(0, -1);
+      if (url.charAt(url.length-1) === '/'){
+        url = url.slice(0, -1);
+      }
 
       for (var i=1; i<arguments.length; i++){
         var part = arguments[i] || '';
         // Add leading slash
-        if (part.charAt(0) !== '/') part = '/' + part;
+        if (part.charAt(0) !== '/'){
+          part = '/' + part;
+        }
         // Remove trailing slash
-        if (part.charAt(part.length-1) === '/') part = part.slice(0, -1);
+        if (part.charAt(part.length-1) === '/'){
+          part = part.slice(0, -1);
+        }
 
         url += part;
       }
@@ -43,7 +49,9 @@ define(function(){
                  "anchor"],
           uri = {},
           i   = 14;
-      while (i--) uri[key[i]] = m[i] || "";
+      while (i--){
+        uri[key[i]] = m[i] || "";
+      }
       return uri;
     }
     

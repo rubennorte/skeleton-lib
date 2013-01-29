@@ -25,8 +25,9 @@ define([
 
     reset: function(models, options){
       // Otherwise, it may be set to true in fetch function
-      if (models && models.length > 0)
+      if (models && models.length > 0){
         this._loaded = true;
+      }
 
       // return super.reset(models, options);
       return Backbone.Collection.prototype.reset.call(this, models, options);
@@ -42,7 +43,9 @@ define([
       // If reload option is set to false and collection is not empty,
       // return immediately
       if (options.reload === false && this.isLoaded()){
-        if (options.success) options.success();
+        if (options.success){
+          options.success();
+        }
         this.trigger('sync', this, null, options);
 
         // TODO return something that implements the promise interface
@@ -57,8 +60,9 @@ define([
       options.error = bindError(this, options.error);
 
       // Send stored data (for pagination, filtering, etc.)
-      if (!options.data && !_(this._data).isEmpty())
+      if (!options.data && !_(this._data).isEmpty()){
         options.data = this._data;
+      }
 
 
       // return super.fetch(options);
@@ -98,7 +102,9 @@ define([
     return function(){
       collection._loading--;
       collection._loaded = true;
-      if (success) success.apply(collection, arguments);
+      if (success){
+        success.apply(collection, arguments);
+      }
     };
   }
 
@@ -108,7 +114,9 @@ define([
   function bindError(collection, error){
     return function(){
       collection._loading--;
-      if (error) error.apply(collection, arguments);
+      if (error){
+        error.apply(collection, arguments);
+      }
     };
   }
 

@@ -35,8 +35,10 @@ define([
      */
     backendUrl: function(path){
       var parsed = url.parseUri(path);
-      if (parsed.host) return path;
-      else return url.join(_.result(config.url, 'backend'), path);
+      if (parsed.host){
+        return path;
+      }
+      return url.join(_.result(config.url, 'backend'), path);
     },
 
     /**
@@ -44,8 +46,10 @@ define([
      */
     urlTo: function(dst){
       var parsed = url.parseUri(dst);
-      if (parsed.host) return dst;
-      else return url.join(_.result(config.url, 'root'), dst);
+      if (parsed.host){
+        return dst;
+      }
+      return url.join(_.result(config.url, 'root'), dst);
     },
 
     /**
@@ -53,8 +57,10 @@ define([
      */
     assetUrl: function(src){
       var parsed = url.parseUri(src);
-      if (parsed.host) return src;
-      else return url.join(_.result(config.url, 'assets'), src);
+      if (parsed.host){
+        return src;
+      }
+      return url.join(_.result(config.url, 'assets'), src);
     },
 
     /**
@@ -62,8 +68,10 @@ define([
      */
     imageUrl: function(src){
       var parsed = url.parseUri(src);
-      if (parsed.host) return src;
-      else return url.join(_.result(config.url, 'images'), src);
+      if (parsed.host){
+        return src;
+      }
+      return url.join(_.result(config.url, 'images'), src);
     },
 
     /**
@@ -71,8 +79,10 @@ define([
      */
     stylesheetUrl: function(src){
       var parsed = url.parseUri(src);
-      if (parsed.host) return src;
-      else return url.join(_.result(config.url, 'stylesheets'), src);
+      if (parsed.host){
+        return src;
+      }
+      return url.join(_.result(config.url, 'stylesheets'), src);
     }
     
   };

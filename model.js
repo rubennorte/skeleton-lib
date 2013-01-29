@@ -33,7 +33,9 @@ define([
       // If reload option is set to false and model has already been loaded,
       // return immediately
       if (options.reload === false && this.isLoaded()){
-        if (options.success) options.success();
+        if (options.success){
+          options.success();
+        }
         this.trigger('sync', this, null, options);
 
         // TODO return something that implements the promise interface
@@ -76,8 +78,9 @@ define([
 
         // If persistAttributes is defined, keep only selected attributes
         var persist = selectKeys(json, this.persistAttributes);
-        if (!persist)
+        if (!persist){
           persist = _(json).keys();
+        }
 
         // If discardAttributes is defined, remove selected attributes
         var discard = selectKeys(json, this.discardAttributes);
@@ -111,7 +114,9 @@ define([
     return function(){
       model._loading--;
       model._loaded = true;
-      if (success) success.apply(model, arguments);
+      if (success){
+        success.apply(model, arguments);
+      }
     };
   }
 
@@ -121,7 +126,9 @@ define([
   function bindError(model, error){
     return function(){
       model._loading--;
-      if (error) error.apply(model, arguments);
+      if (error){
+        error.apply(model, arguments);
+      }
     };
   }
 

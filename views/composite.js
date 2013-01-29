@@ -19,7 +19,9 @@ define([
       View.apply(this, arguments);
  
       // Initialize views object
-      if (!this.views) this.views = {};
+      if (!this.views){
+        this.views = {};
+      }
     },
 
     getView: function(selector){
@@ -28,8 +30,9 @@ define([
 
     setView: function(selector, view){
       // Remove current subview if exists
-      if (this.views[selector])
+      if (this.views[selector]){
         this.views[selector].remove();
+      }
 
       if (view){
         this.views[selector] = view;
