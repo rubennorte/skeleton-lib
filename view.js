@@ -31,9 +31,14 @@ define([
      *   templateVar('name', 'value') => this
      *   templateVar({name: 'value', ...}) => this
      *   templateVar('name') => 'value'
+     *   templateVar() => object with all template vars
      */
     templateVar: function(name, value){
       this.templateVars = this.templateVars || {};
+
+      if (arguments.length === 0){
+        return this.templateVars;
+      }
 
       var singleArgument = arguments.length === 1;
 
