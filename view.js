@@ -112,6 +112,11 @@ define([
         locals = locals || this.templateVars;
         templateEngine = templateEngine || this.templateEngine;
 
+        // Add view as templateVar by default
+        if (locals && !_.has(locals, 'view')){
+          locals.view = this;
+        }
+
         var content = View.renderTemplate(template, locals, templateEngine);
         this.$el.html(content);
       }
