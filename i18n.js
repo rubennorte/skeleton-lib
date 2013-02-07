@@ -56,17 +56,14 @@ define([
       var locale = this.getLocale(),
           language = this.getLanguage();
 
+      if (typeof text === 'boolean'){
+        text = text ? 'true' : 'false';
+      } else if (typeof text === 'number'){
+        text = '' + text;
+      }
+
       switch (typeof(text)){
         case 'string':
-        case 'number':
-        case 'boolean':
-          
-          if (typeof(text) === 'number'){
-            text = '' + text;
-          } else if (typeof(text) === 'boolean'){
-            text = text ? 'true' : 'false';
-          }
-
           // If text is a string, search in translation object
           if (!this._translations[text] && !this._missingTranslations[text]){
             // The translation is not found, so increment the counter for
