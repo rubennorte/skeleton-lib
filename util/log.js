@@ -6,8 +6,9 @@
  */
 
 define([
+  'underscore',
   'underscore.string'
-], function(_s){
+], function(_, _s){
 
   'use strict';
 
@@ -111,6 +112,8 @@ define([
     },
 
     _doLog: function(level, args){
+      args = _.toArray(args);
+
       var priority = LOG_PRIORITIES[level];
       var logPriority = LOG_PRIORITIES[logLevel];
 
@@ -121,6 +124,19 @@ define([
           this.formatDate(new Date()),
           this.LOG_TAGS[priority],
           args[0]);
+        }
+
+        if (this.interpolateParameters){
+          args = _.map(args, function(arg){
+            if (_.isObject(arg) || _.isArray(arg)){
+              try {
+                return JSON.stringify(arg);
+              } catch (e){}
+            }
+            
+            return arg;
+          });
+          args = [args.join(' ')];
         }
 
         var method = this.LOG_LEVELS[priority];
