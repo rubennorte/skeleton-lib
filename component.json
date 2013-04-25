@@ -1,0 +1,16 @@
+{
+  "name": "skeleton-lib",
+  "version": "0.1.0",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "components"
+  ],
+  "dependencies": {
+    "underscore": "1.4.x",
+    "underscore.string": "2.3.x",
+    "backbone": "1.0.x",
+    "requirejs": "2.1.x",
+    "q": "0.9.x"
+  }
+}
