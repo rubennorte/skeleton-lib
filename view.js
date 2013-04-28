@@ -87,7 +87,7 @@ define([
     postRender: function(){
       this._rendered = true;
       this.trigger('render', this);
-      this.trigger('render:after', this);
+      _.defer(_.bind(this.trigger, this, 'render:after', this));
     },
 
     /**
