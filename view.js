@@ -60,34 +60,37 @@ define([
      * delegate the events and set the _rendered flag as true
      */
     render: function(){
-      this.preRender();
-      this.doRender();
+      this._preRender();
+      this._doRender();
       this.delegateEvents();
-      this.postRender();
+      this._postRender();
       return this;
     },
 
     /**
      * Triggers the "render:before" event
      */
-    preRender: function(){
+    _preRender: function(){
       this.trigger('render:before', this);
+      return this;
     },
 
     /**
      * Renders the view
      */
-    doRender: function(){
+    _doRender: function(){
       this.renderTemplate();
+      return this;
     },
 
     /**
      * Marks the view as rendered and triggers the "render" event
      */
-    postRender: function(){
+    _postRender: function(){
       this._rendered = true;
       this.trigger('render', this);
       _.defer(_.bind(this.trigger, this, 'render:after', this));
+      return this;
     },
 
     /**
@@ -120,6 +123,8 @@ define([
         var content = View.renderTemplate(template, locals, templateEngine);
         this.$el.html(content);
       }
+
+      return this;
     },
 
     /**
