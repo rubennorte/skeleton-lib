@@ -102,7 +102,7 @@ define([
    */
   function bindSuccess(collection, success){
     return function(){
-      collection._loading--;
+      collection._loadingCount--;
       collection._loaded = true;
       if (success){
         success.apply(collection, arguments);
@@ -115,7 +115,7 @@ define([
    */
   function bindError(collection, error){
     return function(){
-      collection._loading--;
+      collection._loadingCount--;
       if (error){
         error.apply(collection, arguments);
       }

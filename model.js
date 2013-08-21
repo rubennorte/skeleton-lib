@@ -115,7 +115,7 @@ define([
    */
   function bindSuccess(model, success){
     return function(){
-      model._loading--;
+      model._loadingCount--;
       model._loaded = true;
       if (success){
         success.apply(model, arguments);
@@ -128,7 +128,7 @@ define([
    */
   function bindError(model, error){
     return function(){
-      model._loading--;
+      model._loadingCount--;
       if (error){
         error.apply(model, arguments);
       }
