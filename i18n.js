@@ -102,6 +102,7 @@ define([
 
       // If text is a string and the key is not the only specified parameter, return interpolated
       if (typeof text === 'string' && arguments.length > 1){
+        arguments[0] = text;
         return _s.sprintf.apply(null, arguments);
       }
       
