@@ -94,10 +94,17 @@ define([
     },
 
     /**
+     * Indicates whether the view has been rendered
+     */
+    isRendered: function(){
+      return this._rendered;
+    },
+
+    /**
      * Renders the view if it was already rendered
      */
     refresh: function(){
-      if (this._rendered){
+      if (this.isRendered()){
         this.render();
       }
       return this;
@@ -134,8 +141,8 @@ define([
       // Remove element from DOM
       this.$el.remove();
 
-      if (!this.removed){ // Avoid infinite recursion
-        this.removed = true;
+      if (!this._removed){ // Avoid infinite recursion
+        this._removed = true;
         this.trigger('remove', this);
       }
 
@@ -143,6 +150,13 @@ define([
       this.dispose();
 
       return this;
+    },
+
+    /**
+     * Indicates whether the view has been removed
+     */
+    isRemoved: function(){
+      return this._removed;
     },
 
     /**
