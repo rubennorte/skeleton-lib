@@ -29,7 +29,7 @@ define([
      * the resulting string
      */
     render: function(template, context){
-      if (typeof(template) === 'function'){
+      if (_.isFunction(template)){
         return template(context);
       }
       return _.template(template, context);

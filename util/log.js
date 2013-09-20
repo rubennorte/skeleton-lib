@@ -13,7 +13,7 @@ define([
   'use strict';
 
   // The "window" object
-  var root = typeof(window) !== 'undefined' ? window : this;
+  var root = typeof window !== 'undefined' ? window : this;
 
   // If console is undefined, define one with all functions as noop (IE hack)
   if (!root.console){
@@ -88,27 +88,27 @@ define([
      * Logs the message unless the log is silenced
      */
     log: function(){
-      return this._doLog("log", arguments);
+      return this._doLog('log', arguments);
     },
 
     trace: function(){
-      return this._doLog("trace", arguments);
+      return this._doLog('trace', arguments);
     },
     
     debug: function(){
-      return this._doLog("debug", arguments);
+      return this._doLog('debug', arguments);
     },
     
     info: function(){
-      return this._doLog("info", arguments);
+      return this._doLog('info', arguments);
     },
     
     warn: function(){
-      return this._doLog("warn", arguments);
+      return this._doLog('warn', arguments);
     },
     
     error: function(){
-      return this._doLog("error", arguments);
+      return this._doLog('error', arguments);
     },
 
     _doLog: function(level, args){

@@ -62,42 +62,42 @@ define([
         text = '' + text;
       }
 
-      switch (typeof(text)){
-        case 'string':
-          // If text is a string, search in translation object
-          if (!this._translations[text] && !this._missingTranslations[text]){
-            // The translation is not found, so increment the counter for
-            // that key in the missing translations object
-            this._missingTranslations[text] =
-              (this._missingTranslations[text] || 0) + 1;
-            this._translations[text] = text;
-            console.info('skeleton/i18n', 'Missing translation for key', text);
+      switch (typeof text){
+      case 'string':
+        // If text is a string, search in translation object
+        if (!this._translations[text] && !this._missingTranslations[text]){
+          // The translation is not found, so increment the counter for
+          // that key in the missing translations object
+          this._missingTranslations[text] =
+            (this._missingTranslations[text] || 0) + 1;
+          this._translations[text] = text;
+          console.info('skeleton/i18n', 'Missing translation for key', text);
+        }
+
+        // Set the translated text as the value in the translations object or
+        // the translation key itself (if the translation is missing)
+        text = this._translations[text] || text;
+        break;
+
+      case 'object':
+        if (text){
+          // If text is an object (and not null), get the translations from it according
+          // to the current locale
+          if (locale in text){
+            text = text[locale];
+          } else if (language in text){
+            text = text[language];
+          } else if (this._defaultLocale in text){
+            text = text[this._defaultLocale];
           }
+        }
+        break;
 
-          // Set the translated text as the value in the translations object or
-          // the translation key itself (if the translation is missing)
-          text = this._translations[text] || text;
-          break;
-
-        case 'object':
-          if (text){
-            // If text is an object (and not null), get the translations from it according
-            // to the current locale
-            if (locale in text){
-              text = text[locale];
-            } else if (language in text){
-              text = text[language];
-            } else if (this._defaultLocale in text){
-              text = text[this._defaultLocale];
-            }
-          }
-          break;
-
-        case 'function':
-          // If text is a function, get the result of this function passing
-          // the locale as a parameter
-          text = text(this._locale);
-          break;
+      case 'function':
+        // If text is a function, get the result of this function passing
+        // the locale as a parameter
+        text = text(this._locale);
+        break;
       }
 
       // If text is a string and the key is not the only specified parameter, return interpolated
@@ -114,7 +114,7 @@ define([
      * by the navigator
      */
     getSystemLocale: function(fn){
-      if (!navigator){
+      if (typeof navigator === 'undefined'){
         return fn(null, this.getDefaultLocale());
       }
 
@@ -188,7 +188,7 @@ define([
       locale = toPOSIXLocale(locale);
 
       // Check if translations object is defined
-      if (typeof(translations) === 'function'){
+      if (_.isFunction(translations)){
         callback = translations;
         translations = null;
       }

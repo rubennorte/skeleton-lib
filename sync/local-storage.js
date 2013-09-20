@@ -193,8 +193,8 @@ define([
      * Determines if the browser supports HTML5 local storage
      */
     isSupported: function(){
-      return typeof(Storage) !== "undefined" &&
-        typeof(localStorage) !== 'undefined';
+      return typeof Storage !== 'undefined' &&
+        typeof localStorage !== 'undefined';
     }
 
   };
