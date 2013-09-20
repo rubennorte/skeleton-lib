@@ -118,7 +118,7 @@ define([
         return fn(null, this.getDefaultLocale());
       }
 
-      // Phonegap support
+      // Cordova/Phonegap support
       if (navigator.globalization && typeof navigator.globalization.getLocaleName === 'function'){
         navigator.globalization.getLocaleName(function(locale){
           fn(null, locale);
