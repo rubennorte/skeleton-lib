@@ -6,20 +6,21 @@
  */
 
 define([
-  'require',
   'backbone',
   'underscore',
   'underscore.string',
-  './util/url'
-], function(require, Backbone, _, _s, url){
+  './util/url',
+  'q',
+  'jquery'
+], function(Backbone, _, _s, url, Q, $){
 
   'use strict';
 
-  var rLocale = /^([a-zA-Z]{2})([\-_]([a-zA-Z]{2}))?$/,
-      rStrictLocale = /^([a-z]{2})([_]([A-Z]{2}))?$/;
+  var TAG = 'skeleton/i18n';
 
-  var LOCALE_FORMAT_ERROR = 'The locale must have a valid format ' +
-    '(e.g. en, es_ES)';
+  var rLocale = /^([a-zA-Z]{2})([\-_]?([a-zA-Z]{2}))?/;
+
+  var LOCALE_FORMAT_ERROR = 'The locale must have a valid format (e.g. "en", "es_ES")';
 
   /**
    * Skeleton I18n module definition
@@ -45,93 +46,136 @@ define([
 
     // Relative path to the locale directory
     _loadPath: '',
-    
+
     /**
-     * Translates the specified parameter.
-     * If it's an object, we assume that the object keys are the language code
-     * and the object values are the translations for that language.
-     * Otherwise, search the translation for that key in the stored translations
+     * Translates a string interpreted as a key in the translations object
      */
-    t: function(text){
-      var locale = this.getLocale(),
-          language = this.getLanguage();
-
-      if (typeof text === 'boolean'){
-        text = text ? 'true' : 'false';
-      } else if (typeof text === 'number'){
-        text = '' + text;
+    translateString: function(str){
+      str = str || 'undefined';
+      var result = this._translations[str];
+      if (!result && !this._missingTranslations[str]){
+        // The translation is not found, so increment the counter for
+        // that key in the missing translations object
+        this._missingTranslations[str] =
+          (this._missingTranslations[str] || 0) + 1;
+        console.info(TAG, 'Missing translation for key', str);
       }
+      str = result || str;
+      arguments[0] = str;
+      return this.interpolate.apply(this, arguments);
+    },
 
-      switch (typeof text){
-      case 'string':
-        // If text is a string, search in translation object
-        if (!this._translations[text] && !this._missingTranslations[text]){
-          // The translation is not found, so increment the counter for
-          // that key in the missing translations object
-          this._missingTranslations[text] =
-            (this._missingTranslations[text] || 0) + 1;
-          this._translations[text] = text;
-          console.info('skeleton/i18n', 'Missing translation for key', text);
-        }
-
-        // Set the translated text as the value in the translations object or
-        // the translation key itself (if the translation is missing)
-        text = this._translations[text] || text;
-        break;
-
-      case 'object':
-        if (text){
-          // If text is an object (and not null), get the translations from it according
-          // to the current locale
-          if (locale in text){
-            text = text[locale];
-          } else if (language in text){
-            text = text[language];
-          } else if (this._defaultLocale in text){
-            text = text[this._defaultLocale];
-          }
-        }
-        break;
-
-      case 'function':
-        // If text is a function, get the result of this function passing
-        // the locale as a parameter
-        text = text(this._locale);
-        break;
+    /**
+     * Translates an object, returning the value for the current
+     * locale or language used as key
+     */
+    translateObject: function(obj){
+      var locale = this.getLocale();
+      var language = this.getLanguage();
+      if (!obj){
+        return obj;
+      } else if (_.has(obj, locale)){
+        obj = obj[locale];
+      } else if (_.has(obj, language)){
+        obj = obj[language];
+      } else if (_.has(obj, this._defaultLocale)){
+        obj = obj[this._defaultLocale];
+      } else {
+        return null;
       }
+      arguments[0] = obj;
+      return this.interpolate.apply(this, arguments);
+    },
 
-      // If text is a string and the key is not the only specified parameter, return interpolated
-      if (typeof text === 'string' && arguments.length > 1){
-        arguments[0] = text;
+    /**
+     * Translates a boolean, searching the key "true" or "false" in the
+     * translations object
+     */
+    translateBoolean: function(bool){
+      bool = String(!!bool);
+      return this.translateString.apply(this, arguments);
+    },
+
+    /**
+     * Translates a number, searching the number as a key in the translations
+     * object
+     */
+    translateNumber: function(number){
+      number = String(number);
+      return this.translateString.apply(this, arguments);
+    },
+
+    /**
+     * Returns the result of the given function using the current locale as
+     * a parameter
+     */
+    translateFunction: function(fn){
+      arguments[0] = fn.apply(this, [this._locale].concat(arguments));
+      return this.interpolate.apply(this, arguments);
+    },
+
+    /**
+     * Interpolates the given string with the rest of parameters
+     */
+    interpolate: function(str){
+      if (arguments.length > 1){
         return _s.sprintf.apply(null, arguments);
       }
-      
-      return text;
+      return str;
+    },
+    
+    /**
+     * Translates the specified parameter, determining it's type and calling
+     * the proper function (translateString, translateObject...)
+     */
+    t: function(value){
+      switch (typeof value){
+      case 'string':
+        return this.translateString.apply(this, arguments);
+      case 'object':
+        return this.translateObject.apply(this, arguments);
+      case 'function':
+        return this.translateFunction.apply(this, arguments);
+      case 'number':
+        return this.translateNumber.apply(this, arguments);
+      case 'boolean':
+        return this.translateBoolean.apply(this, arguments);
+      default:
+        return value;
+      }
     },
 
     /**
      * Returns the system locale according to the information provided
      * by the navigator
      */
-    getSystemLocale: function(fn){
+    getNavigatorLocale: function(fn){
+      var deferred = Q.defer();
+      var promise = deferred.promise;
+      promise.nodeify(fn);
+
       if (typeof navigator === 'undefined'){
-        return fn(null, this.getDefaultLocale());
+        deferred.resolve(this.getDefaultLocale());
+      } else if (navigator.globalization && _.isFunction(navigator.globalization.getLocaleName)){
+        // Cordova/Phonegap support
+        navigator.globalization.getLocaleName(deferred.resolve,
+            returnNavigatorLanguage(deferred));
+      } else {
+        returnNavigatorLanguage(deferred);
       }
 
-      // Cordova/Phonegap support
-      if (navigator.globalization && typeof navigator.globalization.getLocaleName === 'function'){
-        navigator.globalization.getLocaleName(function(locale){
-          fn(null, locale);
-        }, function(err){
-          fn(err);
-        });
-        return;
-      }
-
-      var locale = toPOSIXLocale(navigator.language);
-      fn(null, locale);
+      return promise;
     },
 
+    getSystemLocale: function(){
+      console.warn(TAG, 'getSystemLocale is deprecated and will be removed. ' +
+          'Use getNavigatorLocale instead');
+      return this.getNavigatorLocale();
+    },
+
+    /**
+     * Returns the default locale
+     */
     getDefaultLocale: function(){
       return this._defaultLocale;
     },
@@ -144,35 +188,33 @@ define([
     },
 
     /**
-     * Returns the current language
+     * Returns the language of the specified locale or the current one
      */
-    getLanguage: function(){
-      return this._locale.substr(0,2);
+    getLanguage: function(locale){
+      var loc = locale ? this._tryConvertLocale(locale) : this._locale;
+      return loc && loc.substr(0,2);
     },
 
     /**
-     * Returns the current region
+     * Returns the region of the specified locale or the current one
      */
-    getRegion: function(){
-      return this._locale.substr(3,2);
+    getRegion: function(locale){
+      var loc = locale ? this._tryConvertLocale(locale) : this._locale;
+      return loc && (loc.substr(3,2) || undefined);
     },
 
     /**
      * Returns true if exists any valid locale file for the specified locale
      */
     isLocaleAvailable: function(locale){
-      if (!this._availableLocales){
+      var available = this._availableLocales;
+      if (!available){
         return undefined;
       }
 
-      var language = locale.substr(0,2),
-          languageAvailable = _(this._availableLocales).include(language);
-
-      if (languageAvailable){
-        return true;
-      }
-
-      return locale.length === 5 && _(this._availableLocales).include(locale);
+      var loc = this._convertLocale(locale);
+      var language = this.getLanguage(loc);
+      return _.include(available, language) || _.include(available, loc);
     },
 
     /**
@@ -181,78 +223,66 @@ define([
      * and the translations are loaded, callback function is invoked
      */
     setLocale: function(locale, translations, callback){
-      if (!rLocale.test(locale)){
-        throw new Error(LOCALE_FORMAT_ERROR + ': ' + locale);
-      }
-
-      locale = toPOSIXLocale(locale);
-
-      // Check if translations object is defined
+      // Check optional translations argument
       if (_.isFunction(translations)){
         callback = translations;
         translations = null;
       }
 
+      var deferred = Q.defer();
+      var promise = deferred.promise;
+      promise.nodeify(callback);
+
+      var loc = this._tryConvertLocale(locale);
+
+      // Check locale format
+      if (!loc){
+        deferred.reject(new Error(LOCALE_FORMAT_ERROR + ': ' + locale));
+        return promise;
+      }
+
       // If the locale is the current one, return immediatelly
-      if (locale === this.getLocale()){
-        return callback && callback();
+      if (loc === this.getLocale()){
+        deferred.resolve();
+        return promise;
       }
 
+      // If the translations are defined, we don't have to load them and can
+      // set the locale inmediately
       if (translations){
-        // If the translations are defined, we don't have to load them and can
-        // set the locale inmediately
-        this._setLocaleAndTranslations(locale, translations, callback);
-      } else {
-        // Otherwise, we have to load them (as AMD modules to cache)
-        var language = locale.substr(0,2),
-            region = locale.substr(3,2),
-            localeFiles = [];
-
-        if (!this._availableLocales ||
-            _(this._availableLocales).include(language)){
-          localeFiles.push('json!' + this._getLocaleUrl(language));
-        }
-
-        if (region &&
-            (!this._availableLocales || _(this._availableLocales).include(locale))){
-          localeFiles.push('json!' + this._getLocaleUrl(locale));
-        }
-
-        if (localeFiles.length === 0){
-          if (callback){
-            callback('The specified locale is not available: ' + locale);
-          }
-          return false;
-        }
-
-        this._loadLocaleFiles(locale, localeFiles, callback);
+        this._setLocaleAndTranslations(loc, translations);
+        deferred.resolve();
+        return promise;
       }
+
+      // Load translations from files
+      var localeFiles = this.getPathsForLocale(loc);
+      if (localeFiles.length === 0){
+        deferred.reject(new Error('The specified locale is not available: ' + loc));
+        return promise;
+      }
+
+      return this._loadLocaleFiles(loc, localeFiles, callback).nodeify(callback);
     },
 
     /**
      * Sets the available locale files in the project
      */
-    setAvailableLocales: function(availableLocales){
-      _(availableLocales).each(function(availableLocale){
-        if (!rStrictLocale.test(availableLocale)){
-          throw new Error(LOCALE_FORMAT_ERROR + ': ' + availableLocale);
-        }
-      });
-      var prevAvailableLocales = this._availableLocales;
-      this._availableLocales = availableLocales;
-      this.trigger('change:availableLocales', this, availableLocales, prevAvailableLocales);
+    setAvailableLocales: function(available){
+      var self = this;
+      available = _.map(available, _.bind(this._convertLocale, this));
+      var prevAvailable = this._availableLocales;
+      this._availableLocales = available;
+      this.trigger('change:availableLocales', this, available, prevAvailable);
     },
 
     /**
      * Sets the default locale
      */
     setDefaultLocale: function(locale){
-      if (!rStrictLocale.test(locale)){
-        throw new Error(LOCALE_FORMAT_ERROR + ': ' + locale);
-      }
-
+      var loc = this._convertLocale(locale);
       var prevLocale = this._defaultLocale;
-      this._defaultLocale = locale;
+      this._defaultLocale = loc;
       this.trigger('change:defaultLocale', this, locale, prevLocale);
     },
 
@@ -263,70 +293,94 @@ define([
       this._loadPath = path;
     },
 
+    /**
+     * Returns a list of files that contains the translations for
+     * the specified locale
+     */
+    getPathsForLocale: function(locale){
+      var language = this.getLanguage(locale);
+      var region = this.getRegion(locale);
+      var available = this._availableLocales;
+      var localeFiles = [];
+
+      if (!available || _.include(available, language)){
+        localeFiles.push(this.getPathForLocale(language));
+      }
+
+      if (!available || _.include(available, locale)){
+        localeFiles.push(this.getPathForLocale(locale));
+      }
+
+      return localeFiles;
+    },
+
     // Returns the URL of the JSON containing the translations for the specified
     // locale
-    _getLocaleUrl: function(locale){
+    getPathForLocale: function(locale){
       return url.join(_.result(this, '_loadPath'), locale + '.json');
     },
 
     // Assigns the locale, the translations object and invokes the callback
-    _setLocaleAndTranslations: function(locale, translations, callback){
+    _setLocaleAndTranslations: function(locale, translations){
       if (this._locale !== locale || !_.isEqual(this._translations, translations)){
-        console.info('skeleton/i18n', 'Locale set to', locale);
+        console.info(TAG, 'Locale set to', locale);
         this._locale = locale;
         this._translations = translations;
         this._missingTranslations = {};
         this.trigger('change:locale', this);
       }
-      if (callback){
-        callback(null, locale);
-      }
     },
 
     // Loads the locale files and merges the translation objects
     // into one
-    _loadLocaleFiles: function(locale, localeFiles, callback){
+    _loadLocaleFiles: function(locale, localeFiles){
       var self = this;
-
-      var results = 0;
-      var resultTranslations = _.map(localeFiles, function(){
-        return {};
+      var requests = _.map(localeFiles, _.bind(this._loadLocaleFile, this));
+      return Q.all(requests).then(function(results){
+        results.unshift({});
+        var translations = _.extend.apply(_, results);
+        self._setLocaleAndTranslations(locale, translations);
       });
+    },
 
-      var onResponse = function(){
-        results++;
-        if (results === resultTranslations.length){
-          var translations = {};
-          _.each(resultTranslations, function(current){
-            translations = _.extend(translations, current);
-          });
-          self._setLocaleAndTranslations(locale, translations, callback);
-        }
-      };
-
-      _.each(localeFiles, function(localeFile, index){
-        require([localeFile], function(localeTranslations){
-          resultTranslations[index] = localeTranslations;
-          onResponse();
-        }, function(){
-          onResponse();
-        });
+    _loadLocaleFile: function(localeFile){
+      return $.getJSON(localeFile).error(function(){
+        return null;
       });
+    },
+
+    _tryConvertLocale: function(locale){
+      var matches = rLocale.exec(locale);
+      if (!matches){
+        return;
+      }
+      var language = matches[1].toLowerCase();
+      var region = matches[3];
+      if (region){
+        return language + '_' + region.toUpperCase();
+      } else {
+        return language;
+      }
+    },
+
+    _convertLocale: function(locale){
+      var loc = this._tryConvertLocale(locale);
+      if (!loc){
+        throw new Error(LOCALE_FORMAT_ERROR + ': ' + locale);
+      }
+      return loc;
     }
 
   });
 
-  function toPOSIXLocale(locale){
-    if (!locale){
-      return locale;
+  function returnNavigatorLanguage(deferred){
+    var navLang = navigator.language;
+    var locale = I18n._tryConvertLocale(navLang);
+    if (locale){
+      deferred.resolve(locale);
+    } else {
+      deferred.reject(LOCALE_FORMAT_ERROR + ': ' + navLang);
     }
-
-    if (locale.length === 2){
-      return locale.toLowerCase();
-    }
-    
-    return locale.substr(0,2).toLowerCase() + '_' +
-      locale.substr(3,2).toUpperCase();
   }
 
   return I18n;
