@@ -50,9 +50,7 @@ define([
         this.trigger('sync', this, null, options);
 
         // Return promise to make this function fully compatible with Backbone's
-        var deferred = Q.defer();
-        deferred.resolve();
-        return deferred.promise;
+        return Q.resolve();
       }
 
       // Increment loading count

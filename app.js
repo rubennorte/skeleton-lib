@@ -14,34 +14,14 @@ define([
 
   'use strict';
 
-  // Triggers the initialization event and, when all returned promises has been
-  // resolved, resolves the event promise. If it fails, it calls
-  // initializationError with the event name and the error arguments
-  function triggerInitializationEvent(event, eventPromise){
-    /*jshint validthis:true */
-
-    // Trigger initialization event
-    var promiseAggregator = new PromiseAggregator();
-    this.trigger(event, promiseAggregator);
-
-    // Resolve event promise when all initialization promises have been resolved
-    var initializationError = _.bind(this.initializationError, this, event);
-    Q.all(promiseAggregator.all()).then(eventPromise.resolve, initializationError);
-  }
-
   // When the previous event has finished, triggers the current event
   // and returns its promise
-  function triggerWhen(previous, event){
-    /*jshint validthis:true */
-    // Create event promise
-    var current = Q.defer();
-    var boundTrigger = _.bind(triggerInitializationEvent, this, event, current);
-
-    // Trigger initialization event when the previous promise is resolved
-    Q.all(previous).done(boundTrigger);
-
-    // Return the current promise
-    return current.promise;
+  function runStep(previousStep, step){
+    return previousStep.then(function(){
+      var promiseAggregator = new PromiseAggregator();
+      this.trigger(step, promiseAggregator);
+      return Q.all(promiseAggregator.all());
+    });
   }
 
   function App(){}
@@ -53,7 +33,10 @@ define([
     ],
 
     initialize: function(){
-      _.reduce(this.INITIALIZATION_EVENTS, triggerWhen, [], this);
+      var self = this;
+      var p = _.reduce(this.INITIALIZATION_EVENTS, runStep, Q.resolve(), this);
+      p.error(_.bind(this.initializationError, this));
+      return p;
     },
 
     initializationError: function(event /*, errorArgs... */){}
