@@ -30,7 +30,7 @@ define([
   
   // I18n config
   config.i18n = {};
-  config.i18n.loadPath = 'locales';
+  config.i18n.loadPath = function(){ return join(config.url.assets, 'locales'); };
   config.i18n.defaultLocale = 'en';
   config.i18n.locale = 'en';
   config.i18n.availableLocales = null;
